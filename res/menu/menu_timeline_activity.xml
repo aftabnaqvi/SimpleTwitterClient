@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+	<item
+        android:id="@+id/compose_tweet"
+        android:orderInCategory="100"
+        android:showAsAction="always"
+        android:icon="@drawable/compose_tweet_action"
+        android:title="@string/compose_tweet_title"/>
+
+</menu>
