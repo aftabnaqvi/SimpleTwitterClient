@@ -42,3 +42,5 @@ Bonus: User can see embedded image media within the tweet detail view - 90% done
 
 Bonus: Compose activity is replaced with a modal overlay.
 
+demo link with some advance features:
+https://github.com/aftabnaqvi/SimpleTwitterClient/blob/master/SimpleTwitterClient_11.gif
