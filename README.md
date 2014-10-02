@@ -23,6 +23,8 @@ User can then enter a new tweet and post this to twitter
 
 User is taken back to home timeline with new tweet visible in timeline
 
+demo link for required user stories with some extras: https://github.com/aftabnaqvi/SimpleTwitterClient/blob/master/SimpleTwitterClient_1.0.gif
+
 ##Completed following optional user stories
 Optional: Links in tweets are clickable and will launch the web browser (see autolink)
 Optional: User can see a counter with total number of characters left for tweet.
