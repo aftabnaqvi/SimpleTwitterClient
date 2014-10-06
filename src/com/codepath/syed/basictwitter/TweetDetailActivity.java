@@ -42,11 +42,15 @@ public class TweetDetailActivity extends FragmentActivity implements OnItemClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_tweet_detail);
         setupViews();
+        getActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     private void setupViews() {
-        //tweet = (Tweet) getIntent().getParcelableExtra("tweet"); - still working on it.
-
+    	try{
+    		tweet = (Tweet) getIntent().getParcelableExtra("tweet"); //- still working on it.
+    	} catch(Exception e){
+    		e.printStackTrace();
+    	}
         ivRetweetedIcon = (ImageView)findViewById(R.id.ivRetweetedIcon);
         tvRetweetBy = (TextView)findViewById(R.id.tvRetweetedBy);
         ivProfileImage = (ImageView)findViewById(R.id.ivProfileImage);
@@ -93,8 +97,9 @@ public class TweetDetailActivity extends FragmentActivity implements OnItemClick
         tvFavCount.setText(String.valueOf(tweet.getFavoriteCount()));
 
         if (tweet.getTwitterMediaUrls() != null && tweet.getTwitterMediaUrls().size() > 0){
-            ImageLoader.getInstance().displayImage(tweet.getTwitterMediaUrls().get(0).getMedia_url_https(),ivMedia);
-            ivMedia.setVisibility(View.VISIBLE);
+        	ivMedia.setVisibility(View.VISIBLE);
+            ImageLoader.getInstance().displayImage(tweet.getTwitterMediaUrls().get(0).getMediaUrlHttps(), ivMedia);
+            
         } else {
             ivMedia.setVisibility(View.GONE);
         }

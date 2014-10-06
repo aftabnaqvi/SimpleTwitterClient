@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="primary_blue">#55ACEE</color>
+    <color name="secondary_gary_1">#292f33</color>
+    <color name="secondary_gary_2">#66757F</color>
+    <color name="secondary_gary_3">#8899A6</color>
+    <color name="secondary_gary_4">#CCD6DD</color>
+    <color name="secondary_gary_5">#E1E8ED</color>
+    <color name="secondary_gary_6">#F5F8FA</color>
+
+</resources>

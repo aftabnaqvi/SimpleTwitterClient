@@ -101,29 +101,14 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 		    }
 		});
 		
-//		viewHolder.tvReply.setOnHoverListener(new OnHoverListener() {
-//			 
-//		    @Override
-//		    public boolean onHover(View v, MotionEvent event) {
-//	            switch (event.getAction()) {
-//	                case MotionEvent.ACTION_HOVER_ENTER:
-//	                	((PullToRefreshListView) parent).performItemClick(v, position, 0);
-//	                    break;
-////	                case MotionEvent.ACTION_HOVER_MOVE:
-////	                    mMessageTextView.setText(Hover.this.getResources().getString(
-////	                            R.string.hover_message_moved_at,
-////	                            event.getX(), event.getY()));
-////	                    break;
-////	                case MotionEvent.ACTION_HOVER_EXIT:
-////	                    mMessageTextView.setText(Hover.this.getResources().getString(
-////	                            R.string.hover_message_exited_at,
-////	                            event.getX(), event.getY()));
-//	                   //break;
-//	            }
-//	            return false;
-//	            //break;
-//	        }
-//		});
+		viewHolder.ivProfileImage.setOnClickListener(new OnClickListener() {
+			 
+		    @Override
+		    public void onClick(View v) {
+		    	((PullToRefreshListView) parent).performItemClick(v, position, 0);
+		    	v.setTag(tweet.getUser().getName());
+		    }
+		});
 		
 		return convertView;
 	}
@@ -155,22 +140,11 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 		
 		if (tweet.getTwitterMediaUrls() != null && tweet.getTwitterMediaUrls().size() > 0){
 			ImageLoader imageLoader = ImageLoader.getInstance();
-            imageLoader.displayImage(tweet.getTwitterMediaUrls().get(0).getMedia_url_https(),viewHolder.ivTweetImage);
-            viewHolder.ivTweetImage.setVisibility(View.VISIBLE);
+			viewHolder.ivTweetImage.setVisibility(View.VISIBLE);
+            imageLoader.displayImage(tweet.getTwitterMediaUrls().get(0).getMediaUrlHttps(),viewHolder.ivTweetImage);
+            
         } else {
             viewHolder.ivTweetImage.setVisibility(View.GONE);
-//            RelativeLayout.LayoutParams p = (RelativeLayout.LayoutParams)viewHolder.tvReply.getLayoutParams();
-//            p.topMargin = viewHolder.tvTweetBody.getHeight() +  viewHolder.tvScreenName.getHeight() + 10; // in PX
-//
-//            //p.addRule(RelativeLayout.BELOW);
-////            RelativeLayout.LayoutParams p = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-////                    ViewGroup.LayoutParams.WRAP_CONTENT);
-////
-////            p.addRule(RelativeLayout.BELOW, R.id.etTweet);
-////
-////            viewHolder.tvReply.setLayoutParams(p);
-           
-            
         }
 		
 		if(viewHolder.tvTime != null){

@@ -106,9 +106,9 @@
         android:layout_below="@+id/tvTweetBody"
         android:drawableRight="@drawable/reply" />
     
-    <!-- 
+<!-- 
     <ImageView
-        android:id="@+id/ivTweetImage"
+        android:id="@+id/ivTweetImage1"
         android:layout_width="fill_parent"
         android:layout_height="150dp"
         android:layout_above="@+id/tvRetweet"
@@ -117,9 +117,10 @@
         android:layout_below="@+id/tvTweetBody"
         android:src="@drawable/bird_blue_48" 
 
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
-        android:adjustViewBounds="true"/>  -->
-    
+        android:adjustViewBounds="true"
+        android:visibility="gone"/> 
+    --> 
 </RelativeLayout>

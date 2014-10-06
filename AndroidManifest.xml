@@ -5,7 +5,7 @@
     android:versionName="1.0" >
 
     <uses-sdk
-        android:minSdkVersion="14"
+        android:minSdkVersion="18"
         android:targetSdkVersion="19" />
 
     <uses-permission android:name="android.permission.INTERNET" />
@@ -60,6 +60,10 @@
             android:label="@string/tweet_detail_title" >
         </activity>
         
+        <activity
+            android:name=".ViewProfileActivity"
+            android:label="@string/view_profile_activity_title" >
+        </activity>
     </application>
 
 </manifest>

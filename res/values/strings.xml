@@ -3,6 +3,7 @@
 
     <string name="app_name">BasicTwitter</string>
     <string name="compose_tweet_title">Compose Tweet</string>
+    <string name="view_profile">View Profile</string>
     <string name="tweet_title_char_left">140</string>
     <string name="tweet_message_body_hint">What\'s happening?</string>
     <string name="new_tweet">New Tweet</string>
@@ -20,5 +21,9 @@
     <string name="ptr_refreshing">Refreshing…</string>
     <string name="ptr_last_updated">Updated: %1$s</string>
     <string name="tweet_detail_title">Activity detail</string>
+    <string name="view_profile_activity_title">Profile</string>
+    <string name="total_tweets">240\nTWEETS</string>
+    <string name="total_following">270\nFOLLOWING</string>
+    <string name="total_followers">400\nFOLLOWERS</string>
     
 </resources>

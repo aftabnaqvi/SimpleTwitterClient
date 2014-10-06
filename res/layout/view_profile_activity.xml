@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+
+            <LinearLayout
+                android:id="@+id/profile_stats"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/flProfile"
+                android:background="#FFFFFF" >
+
+                <TextView
+                    android:id="@+id/tvTweets"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="start"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="8dp"
+                    android:text="@string/total_tweets" 
+                    android:textColor="@color/secondary_gary_3"/>
+
+                <View
+                    android:id="@+id/view2"
+                    android:layout_width="1dp"
+                    android:layout_height="fill_parent"
+                    android:background="@color/secondary_gary_3" />
+
+                <TextView
+                    android:id="@+id/tvFollowing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="8dp"
+                    android:text="@string/total_following"
+                    android:textColor="@color/secondary_gary_3" />
+
+                <View
+                    android:id="@+id/view1"
+                    android:layout_width="1dp"
+                    android:layout_height="fill_parent"
+                    android:background="@color/secondary_gary_3" />
+
+                <TextView
+                    android:id="@+id/tvFollowers"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:paddingBottom="5dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:paddingTop="8dp"
+                    android:text="@string/total_followers" 
+                    android:textColor="@color/secondary_gary_3"/>
+            </LinearLayout>
+
+            <View
+                android:id="@+id/view3"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_below="@+id/profile_stats"
+                android:background="@color/secondary_gary_3" />
+
+            <FrameLayout
+                android:id="@+id/flProfile"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:background="#8d8686" >
+
+                <ImageView
+                    android:id="@+id/ivBanner"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"
+                    android:background="#8d8686"
+                    android:src="@drawable/bird_blue_48" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="200dp" >
+
+                    <TextView
+                        android:id="@+id/tvProfileInfo"
+                        android:layout_width="match_parent"
+                        android:layout_height="72dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_below="@+id/ivProfileImg"
+                        android:layout_marginTop="5dp"
+                        android:background="#00000000"
+                        android:gravity="center_horizontal"
+                        android:padding="2dp"
+                        android:text="I taught your phone that thing you like.  The Mobile Partner Engineer \@Twitter. "
+                        android:textColor="#FFAAFF" />
+
+                    <ImageView
+                        android:id="@+id/ivProfileImg"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="15dp"
+                        android:background="#8d8686"
+                        android:src="@drawable/retweet" />
+                </RelativeLayout>
+            </FrameLayout>
+            
+            <Space
+                android:id="@+id/space"
+		        android:layout_width="wrap_content"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentLeft="true"
+		        android:layout_below="@+id/profile_stats" 
+		        android:background="#FFDDDD"/>
+
+		    <ListView
+		        android:id="@+id/lvTweetsInProfile"
+		        android:layout_width="match_parent"
+		        android:layout_height="wrap_content"
+		        android:layout_alignParentLeft="true"
+		        android:layout_below="@+id/space" >
+		    </ListView>
+		    
+        </RelativeLayout>
+    </ScrollView>
+
+    
+
+</RelativeLayout>

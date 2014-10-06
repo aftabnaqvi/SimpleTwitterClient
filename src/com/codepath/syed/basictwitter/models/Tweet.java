@@ -1,6 +1,7 @@
 package com.codepath.syed.basictwitter.models;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -9,22 +10,46 @@ import org.json.JSONObject;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Tweet implements Parcelable{
+import com.activeandroid.Model;
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+import com.activeandroid.query.Select;
+
+@Table (name = "Tweet")
+public class Tweet extends Model implements Parcelable{
+	@Column(name = "body")
 	private String body;
+	
+	@Column(name = "uid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
 	private long uid;
+	
+	@Column(name = "createdAt")
 	private String createdAt;
+	
+	@Column(name = "reTweetedCount")
 	private long reTweetCount;
+	
+	@Column(name = "favoriteCount")
 	private long favoriteCount;
-	private boolean retweeted;
-    private Tweet retweetedStatus;
-    private boolean favorited;
+	
+	@Column(name = "favorited")
+	private boolean favorited;
+	
+	@Column(name = "reTweeted")
+	private boolean reTweeted;
+    
+	@Column(name = "reTweetedStatus")
+	private Tweet reTweetedStatus;
+    
+	@Column(name = "user", onUpdate = Column.ForeignKeyAction.CASCADE, onDelete = Column.ForeignKeyAction.CASCADE)
 	private User user;
 	
     private ArrayList<TwitterUrl> twitterUrls;
     private ArrayList<TwitterMediaUrl> twitterMediaUrls;
     
     public Tweet() {
-        super();
+        this.twitterUrls = new ArrayList<TwitterUrl>();
+        this.twitterMediaUrls = new ArrayList<TwitterMediaUrl>();
     }
     
     //Tweet.fromJSON(...) - factory method...
@@ -45,7 +70,7 @@ public class Tweet implements Parcelable{
 			tweet.user = User.fromJson(json.getJSONObject("user"));
 			
 			if (!json.isNull("retweeted_status")){
-                tweet.retweetedStatus = Tweet.fromJSON(json.getJSONObject("retweeted_status"));
+                tweet.reTweetedStatus = Tweet.fromJSON(json.getJSONObject("retweeted_status"));
             }
             if (!json.getJSONObject("entities").isNull("urls")) {
                 tweet.twitterUrls = TwitterUrl.fromJSONArray(json.getJSONObject("entities").getJSONArray("urls"));
@@ -107,10 +132,13 @@ public class Tweet implements Parcelable{
 	
 	// for regular URL, remove http.
 	public String getBodyWithoutMediaUrl() {
-        String result = body;
-        for (TwitterUrl twitterUrl : twitterUrls) {
-            result = result.replaceAll(twitterUrl.getUrl(), twitterUrl.gethtmlUrl());
+		String result = body;
+		if(twitterUrls!=null){
+	        for (TwitterUrl twitterUrl : twitterUrls) {
+	            result = result.replaceAll(twitterUrl.getUrl(), twitterUrl.gethtmlUrl());
+	        }
         }
+		
         if(twitterMediaUrls != null){
         	for (TwitterMediaUrl twitterMediaUrl : twitterMediaUrls){
         		result = result.replaceAll(twitterMediaUrl.getUrl(), "");
@@ -150,11 +178,11 @@ public class Tweet implements Parcelable{
 	}
 	
 	public boolean isRetweeted() {
-		return retweeted;
+		return reTweeted;
 	}
 
 	public Tweet getRetweetedStatus() {
-		return retweetedStatus;
+		return reTweetedStatus;
 	}
 
 	public boolean isFavorited() {
@@ -183,7 +211,7 @@ public class Tweet implements Parcelable{
         dest.writeParcelable(this.user, 0);
         dest.writeLong(this.getReTweetCount());
         dest.writeByte(isRetweeted() ? (byte) 1 : (byte) 0);
-        dest.writeParcelable(this.retweetedStatus, 0);
+        dest.writeParcelable(this.reTweetedStatus, 0);
         dest.writeLong(this.favoriteCount);
         dest.writeByte(isFavorited() ? (byte) 1 : (byte) 0);
         dest.writeTypedList(this.twitterUrls);
@@ -196,10 +224,10 @@ public class Tweet implements Parcelable{
         this.uid = in.readLong();
         this.createdAt = in.readString();
         this.user = in.readParcelable(User.class.getClassLoader());
-        this.setReTweetCount(in.readInt());
+        this.setReTweetCount(in.readLong());
         this.setRetweeted(in.readByte() != 0);
-        this.retweetedStatus = in.readParcelable(Tweet.class.getClassLoader());
-        this.favoriteCount = in.readInt();
+        this.reTweetedStatus = in.readParcelable(Tweet.class.getClassLoader());
+        this.favoriteCount = in.readLong();
         this.setFavorited(in.readByte() != 0);
         in.readTypedList(this.twitterUrls, TwitterUrl.CREATOR);
         in.readTypedList(this.twitterMediaUrls, TwitterMediaUrl.CREATOR);
@@ -223,7 +251,7 @@ public class Tweet implements Parcelable{
 	 * @param retweeted the retweeted to set
 	 */
 	public void setRetweeted(boolean retweeted) {
-		this.retweeted = retweeted;
+		this.reTweeted = retweeted;
 	}
 
 	public static final Creator<Tweet> CREATOR = new Creator<Tweet>() {
@@ -235,4 +263,16 @@ public class Tweet implements Parcelable{
             return new Tweet[size];
         }
     };
+    
+    // Persistence methods.
+    public void saveTweet(){
+    	user.save();
+    	this.save();
+    }
+    
+    // Get all items.
+    public static List<Tweet> getAll() {
+        //return new Select().from(Tweet.class).orderBy("uid DESC").execute();
+        return new Select().from(Tweet.class).execute();
+    }
 }

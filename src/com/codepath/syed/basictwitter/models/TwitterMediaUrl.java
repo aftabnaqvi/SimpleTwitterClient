@@ -9,33 +9,38 @@ import org.json.JSONObject;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
+
+@Table(name = "TwitterMediaUrl")
 public class TwitterMediaUrl implements Parcelable {
+	@Column(name = "url")
     private String url;
+	
+	@Column(name = "expandedUrl")
     private String expandedUrl;
+	
+	@Column(name = "displayUrl")
     private String displayUrl;
+	
+	@Column(name = "mediaUrlHTTPS")
     private String mediaUrlHTTPS;
 
     public TwitterMediaUrl() {
-    	
+    	super();
     }
 
-    private TwitterMediaUrl(Parcel in) {
-    	this();
-        this.url = in.readString();
-        this.expandedUrl = in.readString();
-        this.displayUrl = in.readString();
-        this.mediaUrlHTTPS = in.readString();
-    }
+
     
-    public String getexpandedUrl() {
+    public String getExpandedUrl() {
         return expandedUrl;
     }
 
-    public String getdisplayUrl() {
+    public String getDisplayUrl() {
         return displayUrl;
     }
 
-    public String getMedia_url_https() {
+    public String getMediaUrlHttps() {
         return mediaUrlHTTPS;
     }
 
@@ -87,6 +92,14 @@ public class TwitterMediaUrl implements Parcelable {
         return 0;
     }
 
+    private TwitterMediaUrl(Parcel in) {
+    	this();
+        this.url = in.readString();
+        this.expandedUrl = in.readString();
+        this.displayUrl = in.readString();
+        this.mediaUrlHTTPS = in.readString();
+    }
+    
     @Override
     public void writeToParcel(Parcel dest, int flags) {
 

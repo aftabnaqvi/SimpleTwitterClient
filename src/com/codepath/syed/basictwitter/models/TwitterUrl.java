@@ -9,10 +9,18 @@ import org.json.JSONObject;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class TwitterUrl implements Parcelable {
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
+@Table(name="TwitterUrl")
+public class TwitterUrl implements Parcelable {
+	@Column (name = "Url")
 	private String url;
-    private String expandedUrl;
+    
+	@Column (name = "expandedUrl")
+	private String expandedUrl;
+    
+	@Column (name = "displayUrl")
     private String displayUrl;
 
     public static ArrayList<TwitterUrl> fromJSONArray(JSONArray jsonArray) {
@@ -77,6 +85,7 @@ public class TwitterUrl implements Parcelable {
     }
 
     public TwitterUrl() {
+    	super();
     }
 
     private TwitterUrl(Parcel in) {

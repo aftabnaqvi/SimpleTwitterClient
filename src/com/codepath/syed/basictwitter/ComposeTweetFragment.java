@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -16,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -48,7 +50,7 @@ public class ComposeTweetFragment extends DialogFragment implements OnClickListe
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		setStyle(STYLE_NORMAL,0);
+		//setStyle(STYLE_NORMAL,0);
 	}
 
 	private boolean bOptionsChanged = false;
@@ -67,6 +69,9 @@ public class ComposeTweetFragment extends DialogFragment implements OnClickListe
 		args.putString("reply_to", tweetReplyTo);
 		
 		fragment.setArguments(args);
+		
+		fragment.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
+
 		return fragment;
 	}
 
@@ -78,7 +83,6 @@ public class ComposeTweetFragment extends DialogFragment implements OnClickListe
 		tweetCharCountLeft = 140;
 		totalCount = 140;
 		
-		getDialog().setTitle(getResources().getString(R.string.new_tweet));
 		setupViews(view);
 		addListeners();
 	
