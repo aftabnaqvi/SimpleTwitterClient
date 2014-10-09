@@ -41,7 +41,8 @@ public class TimelineActivity extends FragmentActivity implements ComposeFragmen
 		getCurrentUserDetails();
 		setupTabs();
 		getSupportFragmentManager().executePendingTransactions();
-		mHomeTimelineFragment = (HomeTimelineFragment) getSupportFragmentManager().findFragmentByTag("home"); // fragmnet name is "home" here. be careful....
+		mHomeTimelineFragment = (HomeTimelineFragment) getSupportFragmentManager().findFragmentByTag("home"); // fragment name is "home" here. be careful....
+		Log.d("Fragment TAG: ", mHomeTimelineFragment.getTag());
 	}
 
 	private void setupTabs() {

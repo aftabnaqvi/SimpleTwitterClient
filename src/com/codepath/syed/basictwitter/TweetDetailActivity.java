@@ -203,7 +203,7 @@ public class TweetDetailActivity extends FragmentActivity implements ComposeFrag
 	@Override
 	public void onPostTweet(boolean bPosted, Tweet newTweet) {
 		getSupportFragmentManager().executePendingTransactions();
-		HomeTimelineFragment homeTimelineFragment = (HomeTimelineFragment)getSupportFragmentManager().findFragmentByTag("HomeTimelineFragment");
+		HomeTimelineFragment homeTimelineFragment = (HomeTimelineFragment)getSupportFragmentManager().findFragmentByTag("home"); // home is tag here...
 		if(bPosted && homeTimelineFragment!= null){
 			homeTimelineFragment.insert(newTweet);
 		}
