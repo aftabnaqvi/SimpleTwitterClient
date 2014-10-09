@@ -32,6 +32,7 @@ public class TimelineActivity extends FragmentActivity implements ComposeFragmen
 	protected TwitterClient client;
 	private User currentUser;
 	private SearchView searchView;;
+	private HomeTimelineFragment mHomeTimelineFragment;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -39,6 +40,8 @@ public class TimelineActivity extends FragmentActivity implements ComposeFragmen
 		client = TwitterApplication.getRestClient();
 		getCurrentUserDetails();
 		setupTabs();
+		getSupportFragmentManager().executePendingTransactions();
+		mHomeTimelineFragment = (HomeTimelineFragment) getSupportFragmentManager().findFragmentByTag("home"); // fragmnet name is "home" here. be careful....
 	}
 
 	private void setupTabs() {
@@ -125,6 +128,11 @@ public class TimelineActivity extends FragmentActivity implements ComposeFragmen
             	//searchView.setIconified(true); // stopped calling twice... http://stackoverflow.com/questions/17874951/searchview-onquerytextsubmit-runs-twice-while-i-pressed-once
             	searchView.clearFocus();
             	Log.i("INFO: query....", query);
+            	
+            	// FOLLOWING TWO LINE ARE ALOS WORKING...
+                //InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                //imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
+               
             	// check network availability 
         		if(!isDeviceConnected())
         			return false;
@@ -176,10 +184,9 @@ public class TimelineActivity extends FragmentActivity implements ComposeFragmen
 
 	@Override
 	public void onPostTweet(boolean bPosted, Tweet newTweet) {
-		getSupportFragmentManager().executePendingTransactions();
-		HomeTimelineFragment homeTimelineFragment = (HomeTimelineFragment)getSupportFragmentManager().findFragmentByTag("HomeTimelineFragment");
-		if(bPosted){
-			homeTimelineFragment.insert(newTweet);
+		//HomeTimelineFragment homeTimelineFragment = (HomeTimelineFragment)getSupportFragmentManager().findFragmentByTag("HomeTimelineFragment");
+		if(bPosted && mHomeTimelineFragment != null){
+			mHomeTimelineFragment.insert(newTweet);
 		}
 	}
 }

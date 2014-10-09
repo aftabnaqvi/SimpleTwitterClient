@@ -15,6 +15,10 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class MentionsTimelineFragment extends TweetListFragment {
 
+	public MentionsTimelineFragment(){
+		
+	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);

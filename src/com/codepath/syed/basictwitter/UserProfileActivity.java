@@ -15,6 +15,8 @@ import com.codepath.syed.basictwitter.models.User;
 public class UserProfileActivity extends FragmentActivity implements ComposeFragmentListener{
 	protected TwitterClient client;
 	protected User currUser;
+	protected UserProfileFragment mUserProfileFragment;
+	protected UserTimelineFragment mUserTimelineFragment;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -28,14 +30,15 @@ public class UserProfileActivity extends FragmentActivity implements ComposeFrag
 				
 		FragmentManager fm = getSupportFragmentManager();
 	    FragmentTransaction ft = fm.beginTransaction();
-        UserProfileFragment userProfileFragment = UserProfileFragment.newInstance(currUser);
-        ft.replace(R.id.flUserProfileInfo, userProfileFragment);
+        mUserProfileFragment = UserProfileFragment.newInstance(currUser);
+        ft.replace(R.id.flUserProfileInfo, mUserProfileFragment);
         
-        UserTimelineFragment userTimelineFragment = UserTimelineFragment.newInstance(currUser, 0);
-        ft.replace(R.id.flUserTimeline, userTimelineFragment, "user_time_line_fragment");
+        mUserTimelineFragment = UserTimelineFragment.newInstance(currUser, 0);
+        ft.replace(R.id.flUserTimeline, mUserTimelineFragment, "user_time_line_fragment");
         
         ft.commit();
         fm.executePendingTransactions();
+        
 	}
 
 	@Override
@@ -54,10 +57,10 @@ public class UserProfileActivity extends FragmentActivity implements ComposeFrag
 
 	@Override
 	public void onPostTweet(boolean bPosted, Tweet newTweet) {
-		getSupportFragmentManager().executePendingTransactions();
-		UserTimelineFragment userTimelineFragment = (UserTimelineFragment)getSupportFragmentManager().findFragmentByTag("user_time_line_fragment");
-		if(bPosted && userTimelineFragment != null){
-			userTimelineFragment.insert(newTweet);
+//		getSupportFragmentManager().executePendingTransactions();
+//		UserTimelineFragment userTimelineFragment = (UserTimelineFragment)getSupportFragmentManager().findFragmentByTag("user_time_line_fragment");
+		if(bPosted && mUserTimelineFragment != null){
+			mUserTimelineFragment.insert(newTweet);
 		}
 	}
 }

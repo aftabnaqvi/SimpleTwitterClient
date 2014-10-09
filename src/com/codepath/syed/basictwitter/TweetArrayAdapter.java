@@ -84,9 +84,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 			 
 		    @Override
 		    public void onClick(View v) {
-		    	if(!tweet.isRetweeted()){
-		    		((PullToRefreshListView) parent).performItemClick(v, position, 0);
-		    	}
+		    	((PullToRefreshListView) parent).performItemClick(v, position, 0);
 		    }
 		});
 		
@@ -94,9 +92,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 			 
 		    @Override
 		    public void onClick(View v) {
-		    	if(!tweet.isFavorited()){
-		    		((PullToRefreshListView) parent).performItemClick(v, position, 0);
-		    	}
+		    	((PullToRefreshListView) parent).performItemClick(v, position, 0);
 		    }
 		});
 		
@@ -152,15 +148,22 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 		}
 		
 		if(viewHolder.tvRetweet != null){
+			viewHolder.tvRetweet.setCompoundDrawablesWithIntrinsicBounds(android.R.color.transparent, 0, 0, 0);
 			if (tweet.isRetweeted()){
 				viewHolder.tvRetweet.setCompoundDrawablesWithIntrinsicBounds(R.drawable.retweet_on, 0, 0, 0);
-			} 
+			} else {
+				viewHolder.tvRetweet.setCompoundDrawablesWithIntrinsicBounds(R.drawable.retweet, 0, 0, 0);
+			}
+			
 			viewHolder.tvRetweet.setText(" "+tweet.getReTweetCount());
 		}
 		
 		if(viewHolder.tvFavorite != null){
+			viewHolder.tvRetweet.setCompoundDrawablesWithIntrinsicBounds(android.R.color.transparent, 0, 0, 0);
 			if (tweet.isFavorited()){
 				viewHolder.tvFavorite.setCompoundDrawablesWithIntrinsicBounds(R.drawable.favorite_on, 0, 0, 0);
+			} else {
+				viewHolder.tvRetweet.setCompoundDrawablesWithIntrinsicBounds(R.drawable.favorite, 0, 0, 0);
 			}
 			viewHolder.tvFavorite.setText(" "+tweet.getFavoriteCount());
 		}
