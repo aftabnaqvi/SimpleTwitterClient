@@ -1,22 +1,43 @@
 package com.codepath.syed.basictwitter;
 
+import org.json.JSONObject;
+
 import android.app.ActionBar;
 import android.app.ActionBar.Tab;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.widget.SearchView;
+import android.widget.Toast;
 
+import com.codepath.syed.basictwitter.fragments.ComposeTweetFragment;
 import com.codepath.syed.basictwitter.fragments.HomeTimelineFragment;
 import com.codepath.syed.basictwitter.fragments.MentionsTimelineFragment;
 import com.codepath.syed.basictwitter.listeners.FragmentTabListener;
-// should use FragmentActivity or ActionBarActivity
+import com.codepath.syed.basictwitter.models.Tweet;
+import com.codepath.syed.basictwitter.models.User;
+import com.codepath.syed.utils.Utility;
+import com.loopj.android.http.JsonHttpResponseHandler;
 
-public class TimelineActivity extends FragmentActivity implements OnDataChangeEventListener{//, OnItemClickListener{
-	
+// should use FragmentActivity or ActionBarActivity
+public class TimelineActivity extends FragmentActivity implements ComposeFragmentListener{//, OnItemClickListener{
+	protected TwitterClient client;
+	private User currentUser;
+	private SearchView searchView;;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timeline);
-		
+		client = TwitterApplication.getRestClient();
+		getCurrentUserDetails();
 		setupTabs();
 	}
 
@@ -49,32 +70,116 @@ public class TimelineActivity extends FragmentActivity implements OnDataChangeEv
 		actionBar.addTab(mentions);
 	}
 
-	@Override
-	public void dataChangeEvent(String s) {
-		// TODO Auto-generated method stub
-		
+	 private void getCurrentUserDetails(){
+			if( !isDeviceConnected() ){
+				Toast.makeText(this, "Netowrk error", Toast.LENGTH_SHORT).show();
+				return;
+			}
+			
+			client.getAccountDetails(new JsonHttpResponseHandler(){
+				@Override
+				public void onSuccess(JSONObject json) {
+					currentUser = User.fromJson(json);
+					saveUser();
+					Log.d("debug","User -->> " + json.toString());
+				}
+
+				@Override
+				public void onFailure(Throwable e, String s) {
+					Log.d("debug:", e.toString());
+					Log.d("debug:", s);
+				}
+			});
+		}
+	// Network handling helpers
+	    protected boolean isDeviceConnected(){
+	    	if(Utility.isNetworkAvailable(this) == false){
+	    		getActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
+	    		getActionBar().setTitle(R.string.network_error);
+				Toast.makeText(this.getApplicationContext(), "Network Error.", Toast.LENGTH_SHORT).show();
+	        	return false; 
+	        }
+	    	
+	    	return true;
+	    }
+
+	  //---------------------- store current user settings in share preferences
+	    private void saveUser(){
+			SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+			
+			editor.putString("name", currentUser.getName());
+			editor.putString("screen_name", currentUser.getScreenName());
+			editor.putString("profile_image_url", currentUser.getProfileImageUrl());
+			editor.commit();
+		}
+
+	//---------------------- action selection handlers
+    @Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+    	getMenuInflater().inflate(R.menu.menu_timeline_activity, menu);
+        final MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchView = (SearchView) searchItem.getActionView();
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+            	//searchView.setIconified(true); // stopped calling twice... http://stackoverflow.com/questions/17874951/searchview-onquerytextsubmit-runs-twice-while-i-pressed-once
+            	searchView.clearFocus();
+            	Log.i("INFO: query....", query);
+            	// check network availability 
+        		if(!isDeviceConnected())
+        			return false;
+
+                searchTweets(query);
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                return true;
+            }
+        });
+        return true;
+    }
+    
+    private void searchTweets(String query) {
+    	Intent seach = new Intent(this, SearchResultActivity.class);
+    	seach.putExtra("query", query);
+    	startActivity(seach);
 	}
+    
+    @Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+	    // action with ID action_refresh was selected
+	    case R.id.compose_tweet:
+	    	showComposeTweetFragment("");
+	      break;
+	      
+	    case R.id.view_profile:
+	    	Intent i = new Intent(this, UserProfileActivity.class);
+	    	i.putExtra("user", currentUser);
+	    	startActivity(i);
+	    	break;
+	    default:
+	    	return super.onOptionsItemSelected(item);
+	    }
 
-	
+	    return true;
+	}
+    
+    protected void showComposeTweetFragment(String tweetReplyTo){
+    	FragmentManager fm = getSupportFragmentManager();
+    	ComposeTweetFragment fragment = ComposeTweetFragment.newInstance(tweetReplyTo, 0, currentUser);
+    	
+    	fragment.show(fm, "compose_tweet_fragment");
+    }
 
-//	@Override
-//	public void onItemClick(AdapterView<?> parent, View view, int position,
-//		long id) {
-//     	long viewId = view.getId();
-//     	 
-//         if (viewId == R.id.tvReply) {
-//         	final Tweet tweet = (Tweet)aTweets.getItem(position+1); // I don't know why position is coming as -1. but it is working for now.
-//             Log.d("debug:", "tvReply Clicked");
-//             if(tweet!=null)
-//             	showComposeTweetFragment("@"+tweet.getUser().getScreenName()+" ");
-//         } else if (viewId == R.id.tvRetweet) {
-//         	Log.d("debug:", "tvRetweet Clicked");
-//         	
-//         } else {
-////             	TweetDetailActivity detailActivity
-//         	Intent i = new Intent(this, TweetDetailActivity.class);
-//         	startActivityForResult(i, RESULT_OK);
-//         }
-//     }
-
+	@Override
+	public void onPostTweet(boolean bPosted, Tweet newTweet) {
+		getSupportFragmentManager().executePendingTransactions();
+		HomeTimelineFragment homeTimelineFragment = (HomeTimelineFragment)getSupportFragmentManager().findFragmentByTag("HomeTimelineFragment");
+		if(bPosted){
+			homeTimelineFragment.insert(newTweet);
+		}
+	}
 }

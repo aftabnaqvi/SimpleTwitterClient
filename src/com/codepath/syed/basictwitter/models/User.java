@@ -32,15 +32,26 @@ public class User extends Model implements Parcelable{
 	@Column(name = "profileImageUrl")
 	private String profileImageUrl;
 	
-	//@Column(name = "description")
+	@Column(name = "description")
 	private String description;
 	
-	//@Column(name = "followersCount")
+	@Column(name = "followersCount")
 	private long followersCount;
+	
+	@Column(name = "followingCount")
 	private long followingCount;
+	
+	@Column(name = "tweetsCount")
 	private long tweetsCount;
+	
+	@Column(name = "profileBackgroundImageUrl")
 	private String profileBackgroundImageUrl;
 
+	public String getProfileBackgroundImageUrl() {
+		// TODO Auto-generated method stub
+		return profileBackgroundImageUrl;
+	}
+	
 	public long getFollowingCount() {
 		return followingCount;
 	}
@@ -59,7 +70,6 @@ public class User extends Model implements Parcelable{
 	public String getName() {
 		return name;
 	}
-
 
 	/**
 	 * @return the screenName

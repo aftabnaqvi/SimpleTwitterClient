@@ -64,12 +64,13 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 			viewHolder.tvFavorite = (TextView)convertView.findViewById(R.id.tvFavorite); 
 			viewHolder.tvReply = (TextView)convertView.findViewById(R.id.tvReply);
 			viewHolder.ivTweetImage = (ImageView)convertView.findViewById(R.id.ivTweetImage);
+			
 			convertView.setTag(viewHolder);
 		}else {
 			viewHolder = (ViewHolder) convertView.getTag();
 			
 		}	
-	
+		
 		updateTweetVew(viewHolder, tweet);
 		viewHolder.tvReply.setOnClickListener(new OnClickListener() {
 			 
@@ -84,7 +85,6 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 		    @Override
 		    public void onClick(View v) {
 		    	if(!tweet.isRetweeted()){
-		    		tweet.setRetweeted(true);
 		    		((PullToRefreshListView) parent).performItemClick(v, position, 0);
 		    	}
 		    }
@@ -95,7 +95,6 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 		    @Override
 		    public void onClick(View v) {
 		    	if(!tweet.isFavorited()){
-		    		tweet.setFavorited(true);
 		    		((PullToRefreshListView) parent).performItemClick(v, position, 0);
 		    	}
 		    }
@@ -105,8 +104,8 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 			 
 		    @Override
 		    public void onClick(View v) {
+		    	v.setTag(tweet.getUser().getScreenName());
 		    	((PullToRefreshListView) parent).performItemClick(v, position, 0);
-		    	v.setTag(tweet.getUser().getName());
 		    }
 		});
 		
@@ -155,19 +154,15 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 		if(viewHolder.tvRetweet != null){
 			if (tweet.isRetweeted()){
 				viewHolder.tvRetweet.setCompoundDrawablesWithIntrinsicBounds(R.drawable.retweet_on, 0, 0, 0);
-				viewHolder.tvRetweet.setText(" "+tweet.getReTweetCount());
-			} else {
-				viewHolder.tvRetweet.setText(" "+tweet.getReTweetCount());
-			}
+			} 
+			viewHolder.tvRetweet.setText(" "+tweet.getReTweetCount());
 		}
 		
 		if(viewHolder.tvFavorite != null){
 			if (tweet.isFavorited()){
 				viewHolder.tvFavorite.setCompoundDrawablesWithIntrinsicBounds(R.drawable.favorite_on, 0, 0, 0);
-				viewHolder.tvFavorite.setText(" "+tweet.getReTweetCount());
-			} else {
-				viewHolder.tvFavorite.setText(" "+tweet.getFavoriteCount());
 			}
+			viewHolder.tvFavorite.setText(" "+tweet.getFavoriteCount());
 		}
 		
 		if(viewHolder.tvScreenName != null){

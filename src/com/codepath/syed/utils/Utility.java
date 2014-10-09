@@ -7,6 +7,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.format.DateUtils;
+import android.util.Log;
 
 public class Utility {
 	// getRelativeTimeAgo("Mon Apr 01 21:16:23 +0000 2014");
@@ -26,8 +27,13 @@ public class Utility {
 		}
 		
 		int index = relativeDate.indexOf(' ');
-		String duration = relativeDate.substring(0, index);
-		
+		String duration = null;
+		if(index != -1)
+			duration = relativeDate.substring(0, index);
+		else{
+			Log.d("getRelativeTimeAgo", "unexpected time: " + relativeDate);
+			return relativeDate; 
+		}
 		if(relativeDate.contains("seconds") || relativeDate.contains("second")){
 			relativeDate = duration + "s";
 		} else if(relativeDate.contains("minutes") || relativeDate.contains("minute")){
@@ -38,10 +44,11 @@ public class Utility {
 			relativeDate = duration + "d";
 		}else if(relativeDate.contains("year") || relativeDate.contains("years")) {
 			relativeDate = duration + "y";
-		}		
+		}
+		
 		return relativeDate;
 	}
-	
+
 	public static boolean isNetworkAvailable(Context context) {
         ConnectivityManager connectivityManager 
         			= (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

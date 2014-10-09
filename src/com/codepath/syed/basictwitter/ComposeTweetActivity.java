@@ -37,7 +37,7 @@ public class ComposeTweetActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_compose_tweet);
-		getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.mobile_banner));
+		//getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.mobile_banner));
 		client = TwitterApplication.getRestClient();
 		setupViews();
 		
@@ -158,7 +158,7 @@ public class ComposeTweetActivity extends Activity {
 			Toast.makeText(getBaseContext(), "Compose and then Tweet", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		client.postUpdateTweet(new JsonHttpResponseHandler(){
+		client.postUpdateTweet(tweetText, 0, new JsonHttpResponseHandler(){
 			@Override
 			public void onSuccess(JSONObject json) {
 				Log.d("debug:","user-->> posted!!!");
@@ -169,7 +169,7 @@ public class ComposeTweetActivity extends Activity {
 				Log.d("debug:",e.toString());
 				Log.d("debug:",s.toString());
 			}
-		}, tweetText);
+		});
 		
 		Intent i = new Intent();
 		i.putExtra("tweet", tweetText);

@@ -14,7 +14,29 @@
 
     <!-- Application theme. -->
     <style name="AppTheme" parent="AppBaseTheme">
+        <item name="android:actionBarStyle">@style/TwitterActionBar</item>
+        <item name="android:actionBarTabBarStyle">@style/TwitterTabBar</item>
+        <item name="android:actionBarTabTextStyle">@style/TwitterTabText</item>
         <!-- All customizations that are NOT specific to a particular API-level can go here. -->
     </style>
 
+    <style name="TwitterActionBar" parent="@android:style/Widget.Holo.Light.ActionBar.Solid">
+        <item name="android:background">@color/twitter_blue</item>
+        <item name="android:titleTextStyle">@style/CodePathActionBarTitleText</item>
+    </style>
+
+    <!-- ActionBar title text -->
+    <style name="CodePathActionBarTitleText"
+        parent="@android:style/TextAppearance.Holo.Widget.ActionBar.Title">
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="TwitterTabBar" parent="android:style/Widget.Holo.Light.ActionBar.TabBar">
+        <item name="android:background">@color/twitter_gary_4</item>
+    </style>
+
+
+    <style name="TwitterTabText" parent="android:style/Widget.Holo.Light.ActionBar.TabBar">
+        <item name="android:textColor">@color/twitter_blue</item>
+    </style>
 </resources>

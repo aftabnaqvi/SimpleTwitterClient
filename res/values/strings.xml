@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">BasicTwitter</string>
+    <string name="app_name">Tweets</string>
     <string name="compose_tweet_title">Compose Tweet</string>
     <string name="view_profile">View Profile</string>
     <string name="tweet_title_char_left">140</string>
@@ -22,8 +22,19 @@
     <string name="ptr_last_updated">Updated: %1$s</string>
     <string name="tweet_detail_title">Activity detail</string>
     <string name="view_profile_activity_title">Profile</string>
+    <string name="search_results_activity_title">Search</string>
     <string name="total_tweets">240\nTWEETS</string>
     <string name="total_following">270\nFOLLOWING</string>
     <string name="total_followers">400\nFOLLOWERS</string>
+    <string name="retweet_title">Retweet</string>
+    <string name="retweet_this_to_your_followers">Retweet this to your followers?</string>
+    <string name="undo_this_tweet">Undo this tweet?</string>
+    <string name="undo">Undo</string>
+    <string name="cancel">Cancel</string>
+    <string name="retweet">Retweet</string>
+    <string name="search">Search</string>
+    <string name="about_twitter">About Twitter</string>
+    <string name="about_detail">Twitter helps you create and share ideas and information instantly, without barriers.</string>
+    
     
 </resources>
