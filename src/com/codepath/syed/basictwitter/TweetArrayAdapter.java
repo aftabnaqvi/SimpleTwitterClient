@@ -14,7 +14,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.codepath.syed.basictwitter.models.Tweet;
@@ -148,7 +147,6 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 		}
 		
 		if(viewHolder.tvRetweet != null){
-			viewHolder.tvRetweet.setCompoundDrawablesWithIntrinsicBounds(android.R.color.transparent, 0, 0, 0);
 			if (tweet.isRetweeted()){
 				viewHolder.tvRetweet.setCompoundDrawablesWithIntrinsicBounds(R.drawable.retweet_on, 0, 0, 0);
 			} else {
@@ -159,11 +157,10 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 		}
 		
 		if(viewHolder.tvFavorite != null){
-			viewHolder.tvRetweet.setCompoundDrawablesWithIntrinsicBounds(android.R.color.transparent, 0, 0, 0);
 			if (tweet.isFavorited()){
 				viewHolder.tvFavorite.setCompoundDrawablesWithIntrinsicBounds(R.drawable.favorite_on, 0, 0, 0);
 			} else {
-				viewHolder.tvRetweet.setCompoundDrawablesWithIntrinsicBounds(R.drawable.favorite, 0, 0, 0);
+				viewHolder.tvFavorite.setCompoundDrawablesWithIntrinsicBounds(R.drawable.favorite, 0, 0, 0);
 			}
 			viewHolder.tvFavorite.setText(" "+tweet.getFavoriteCount());
 		}
