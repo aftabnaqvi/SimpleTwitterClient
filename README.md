@@ -87,3 +87,7 @@ Advanced: User can search for tweets matching a particular query and see results
 
 Demo:
 ![Alt text](https://github.com/aftabnaqvi/SimpleTwitterClient/blob/master/SimpleTwitterClient_2.0.gif "cc-flow.jpeg")
+
+updated Demo:
+
+![Alt text](https://github.com/aftabnaqvi/SimpleTwitterClient/blob/master/SimpleTwitterClient_21.gif "cc-flow.jpeg")
