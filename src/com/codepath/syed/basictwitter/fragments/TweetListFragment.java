@@ -51,6 +51,7 @@ public abstract class TweetListFragment extends Fragment {
 	private TextView selectedTvFavorite;
 	protected ProgressBar progressBar;
 	private Tweet selectedTweet;
+	private int selectedPosition;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -103,8 +104,9 @@ public abstract class TweetListFragment extends Fragment {
 		lvTweets.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
+				selectedPosition = position + 1;
 			     	long viewId = view.getId();
-			     	final Tweet tweet = (Tweet)aTweets.getItem(position+1); // I don't know why position is coming as -1. but it is working for now.
+			     	final Tweet tweet = (Tweet)aTweets.getItem(selectedPosition); // I don't know why position is coming as -1. but it is working for now.
 			         if (viewId == R.id.tvReply) {
 			         	
 			             Log.d("debug:", "tvReply Clicked");
@@ -114,19 +116,17 @@ public abstract class TweetListFragment extends Fragment {
 			             }
 			         } else if (viewId == R.id.tvRetweet) {
 			        	 if(tweet!=null){
-			        		 showRetwwetConfirmationAlert(tweet.isRetweeted() ? true : false);
 			        		 selectedTvRetweet = (TextView)view.findViewById(R.id.tvRetweet);			        		 
 			        		 selectedTweet = tweet;
-			        		// onReTweetClick(selectedTvRetweet);
+			        		 showRetwwetConfirmationAlert(tweet.isRetweeted() ? true : false);
 			        	 }
 			         	Log.d("debug:", "tvRetweet Clicked");
 			         	
 			         } else if(viewId == R.id.tvFavorite){
 			        	 if(tweet!=null){
 			        		 selectedTvFavorite = (TextView)view.findViewById(R.id.tvFavorite);
-			        		 
+			        		 selectedTweet = tweet;
 			        		 onFavoriteClick(selectedTvFavorite);
-			        		 //favorite(tweet, tvFavorite);
 			        	 }
 			        	 Log.d("debug:", "tvFavorite Clicked");
 			         } else if(viewId == R.id.ivProfileImage){
@@ -178,6 +178,7 @@ public abstract class TweetListFragment extends Fragment {
         	selectedTvRetweet.setCompoundDrawablesWithIntrinsicBounds(R.drawable.retweet, 0, 0, 0);
         }
         selectedTvRetweet.setText(String.valueOf(selectedTweet.getReTweetCount()));
+        updateRetweeted(selectedTweet);
     }
 
     private void updateFavorites(){
@@ -187,20 +188,28 @@ public abstract class TweetListFragment extends Fragment {
         	selectedTvFavorite.setCompoundDrawablesWithIntrinsicBounds(R.drawable.favorite, 0, 0, 0);
         }
         selectedTvFavorite.setText(String.valueOf(selectedTweet.getFavoriteCount()));
-
+        updateFavorite(selectedTweet);
     }
     
 	public void onReTweetClick(View view) {
-        if (!selectedTweet.isRetweeted()) {
-            client.postRetweet(selectedTweet.getUid(), new JsonHttpResponseHandler() {
+        if (selectedTweet.isRetweeted()) {
+            client.postStatusDestroy(selectedTweet.getUid(), new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(JSONObject jsonObject) {
                 	selectedTweet = Tweet.fromJSON(jsonObject);
                     updateRetweet();
                 }
             });
-
+        } else {
+        	client.postRetweet(selectedTweet.getUid(), new JsonHttpResponseHandler() {
+                @Override
+                public void onSuccess(JSONObject jsonObject) {
+                	selectedTweet = Tweet.fromJSON(jsonObject);
+                    updateRetweet();
+                }
+            });
         }
+        	
     }
 
     public void onFavoriteClick(View view) {
@@ -250,6 +259,18 @@ public abstract class TweetListFragment extends Fragment {
 	public void insert(Tweet newTweet){
 		aTweets.insert(newTweet, 0);
 		newTweet.save();
+	}
+	
+	public void updateFavorite(Tweet tweet){
+		aTweets.getItem(selectedPosition).setFavoriteCount(tweet.getFavoriteCount());
+		aTweets.getItem(selectedPosition).setFavorited(tweet.isFavorited());
+		aTweets.notifyDataSetChanged();
+	}
+	
+	public void updateRetweeted(Tweet tweet){
+		aTweets.getItem(selectedPosition).setReTweetCount(tweet.getReTweetCount());
+		aTweets.getItem(selectedPosition).setRetweeted(tweet.isRetweeted());
+		aTweets.notifyDataSetChanged();
 	}
 	
 	protected abstract void populateTimeline(boolean b);

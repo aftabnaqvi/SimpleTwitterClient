@@ -112,7 +112,7 @@ public class TwitterClient extends OAuthBaseClient {
         client.get(apiUrl, params, handler);
     }
 	
-    public void postFavoriteCreate(long uid, AsyncHttpResponseHandler handler) {
+    public void postFavoriteCreate(long uid, JsonHttpResponseHandler handler) {
         String apiUrl = getApiUrl("favorites/create.json");
         RequestParams params = new RequestParams();
         params.put("id", Long.toString(uid));
@@ -126,17 +126,17 @@ public class TwitterClient extends OAuthBaseClient {
         client.post(apiUrl, params, handler);
     }
 
-    public void postRetweet(long uid, AsyncHttpResponseHandler handler) {
+    public void postRetweet(long uid, JsonHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/retweet/" + uid + ".json");
         client.post(apiUrl, handler);
     }
 
-    public void postDelete(long uid, AsyncHttpResponseHandler handler) {
+    public void postStatusDestroy(long uid, JsonHttpResponseHandler handler) {
         String apiUrl = getApiUrl("statuses/destroy/" + uid + ".json");
         client.post(apiUrl, handler);
     }
 
-    public void getSearchTweets(String query, String lastTweetId, AsyncHttpResponseHandler handler) {
+    public void getSearchTweets(String query, String lastTweetId, JsonHttpResponseHandler handler) {
         String apiUrl = getApiUrl("search/tweets.json");
         RequestParams params = new RequestParams();
         if (query != null) {
