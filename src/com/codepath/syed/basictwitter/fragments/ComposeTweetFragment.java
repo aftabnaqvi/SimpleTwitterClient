@@ -5,7 +5,6 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -17,7 +16,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -28,10 +26,6 @@ import com.codepath.syed.basictwitter.ComposeFragmentListener;
 import com.codepath.syed.basictwitter.R;
 import com.codepath.syed.basictwitter.TwitterApplication;
 import com.codepath.syed.basictwitter.TwitterClient;
-import com.codepath.syed.basictwitter.R.drawable;
-import com.codepath.syed.basictwitter.R.id;
-import com.codepath.syed.basictwitter.R.layout;
-import com.codepath.syed.basictwitter.R.string;
 import com.codepath.syed.basictwitter.models.Tweet;
 import com.codepath.syed.basictwitter.models.User;
 import com.codepath.syed.utils.Utility;
@@ -41,27 +35,23 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ComposeTweetFragment extends DialogFragment implements OnClickListener{
 
-	private TextView tvUsername;
-	private TextView tvScreenName;
-	private EditText etTweet;
-	private ImageView ivProfileImage;
-	private TextView tvCharLeft;
-	private int tweetCharCountLeft;
-	private int totalCount;
-	private TwitterClient client;
-	private Button btnTweet;
-	private Button btnCancel;
-	private boolean bOptionsChanged = false;
-	private User user;
-	private long inReplyTo;
-	private String replyTo;
+	private TextView mTvUsername;
+	private TextView mTvScreenName;
+	private EditText mEtTweet;
+	private ImageView mIvProfileImage;
+	private TextView mTvCharLeft;
+	private int mTweetCharCountLeft;
+	private int mTotalCount;
+	private TwitterClient mTwitterClient;
+	private Button mBtnTweet;
+	private Button mBtnCancel;
+	private boolean mOptionsChanged = false;
+	private User mUser;
+	private String mReplyTo;
 	
-	ComposeFragmentListener listener;
+	private ComposeFragmentListener listener;
 	private long inReplyId;
 	
-	/* (non-Javadoc)
-	 * @see android.support.v4.app.DialogFragment#onCreate(android.os.Bundle)
-	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
@@ -89,13 +79,12 @@ public class ComposeTweetFragment extends DialogFragment implements OnClickListe
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.fragment_compose_tweet, container);
-		client = TwitterApplication.getRestClient();
-		tweetCharCountLeft = 140;
-		totalCount = 140;
+		mTwitterClient = TwitterApplication.getRestClient();
+		mTweetCharCountLeft = 140;
+		mTotalCount = 140;
 		
-		user = getArguments().getParcelable("user");
-		inReplyId = getArguments().getLong("inReplyId");
-		replyTo = getArguments().getString("replyTo");
+		mUser = getArguments().getParcelable("user");
+		mReplyTo = getArguments().getString("replyTo");
 		
 		setupViews(view);
 		addListeners();
@@ -104,40 +93,40 @@ public class ComposeTweetFragment extends DialogFragment implements OnClickListe
 	}
 
 	private void setupViews(View v){
-		tvUsername = (TextView)v.findViewById(R.id.tvUsername);
-		tvScreenName = (TextView)v.findViewById(R.id.tvCurrentUserScreenName);
-		etTweet = (EditText)v.findViewById(R.id.etTweet);
-		ivProfileImage = (ImageView)v.findViewById(R.id.ivCurrentUserProfileImage);
-		tvCharLeft = (TextView)v.findViewById(R.id.tvCharLeft);
-		btnTweet = (Button)v.findViewById(R.id.btnTweet);
-		btnCancel = (Button)v.findViewById(R.id.btnCancel);
+		mTvUsername = (TextView)v.findViewById(R.id.tvUsername);
+		mTvScreenName = (TextView)v.findViewById(R.id.tvCurrentUserScreenName);
+		mEtTweet = (EditText)v.findViewById(R.id.etTweet);
+		mIvProfileImage = (ImageView)v.findViewById(R.id.ivCurrentUserProfileImage);
+		mTvCharLeft = (TextView)v.findViewById(R.id.tvCharLeft);
+		mBtnTweet = (Button)v.findViewById(R.id.btnTweet);
+		mBtnCancel = (Button)v.findViewById(R.id.btnCancel);
 		
-		if( tvUsername != null)
-			tvUsername.setText(user.getName());
+		if( mTvUsername != null)
+			mTvUsername.setText(mUser.getName());
 		
-		if(tvScreenName != null)
-			tvScreenName.setText("@" + user.getScreenName());
+		if(mTvScreenName != null)
+			mTvScreenName.setText("@" + mUser.getScreenName());
 		
-		if(ivProfileImage != null){
+		if(mIvProfileImage != null){
 			ImageLoader imageLoader = ImageLoader.getInstance();
-			imageLoader.displayImage(user.getProfileImageUrl(), ivProfileImage);
+			imageLoader.displayImage(mUser.getProfileImageUrl(), mIvProfileImage);
 		}
 		
-		if(tvCharLeft != null){
-			tvCharLeft.setText(String.valueOf(tweetCharCountLeft));
+		if(mTvCharLeft != null){
+			mTvCharLeft.setText(String.valueOf(mTweetCharCountLeft));
 		}
 		
-		String replyTo = this.replyTo;
-		if(etTweet != null && !replyTo.isEmpty()){
-			etTweet.setText(replyTo);
-			tweetCharCountLeft = 140-replyTo.length();
-			tvCharLeft.setText(String.valueOf(tweetCharCountLeft));
-			etTweet.setSelection(replyTo.length());
+		String replyTo = this.mReplyTo;
+		if(mEtTweet != null && !replyTo.isEmpty()){
+			mEtTweet.setText(replyTo);
+			mTweetCharCountLeft = 140-replyTo.length();
+			mTvCharLeft.setText(String.valueOf(mTweetCharCountLeft));
+			mEtTweet.setSelection(replyTo.length());
 		}
 	}
 	
 	private void addListeners(){
-		etTweet.addTextChangedListener(new TextWatcher() {
+		mEtTweet.addTextChangedListener(new TextWatcher() {
 
 	   public void afterTextChanged(Editable s) { 
 	   }
@@ -148,72 +137,72 @@ public class ComposeTweetFragment extends DialogFragment implements OnClickListe
 	
 	   public void onTextChanged(CharSequence s, int start,
 	     int before, int count) {
-		   String tweet = etTweet.getText().toString();
-		   tweetCharCountLeft = totalCount-tweet.length();
-		   if(tweetCharCountLeft<0)
-			   tvCharLeft.setTextColor(Color.RED);
+		   String tweet = mEtTweet.getText().toString();
+		   mTweetCharCountLeft = mTotalCount-tweet.length();
+		   if(mTweetCharCountLeft<0)
+			   mTvCharLeft.setTextColor(Color.RED);
 		   else
-			   tvCharLeft.setTextColor(Color.GRAY);
+			   mTvCharLeft.setTextColor(Color.GRAY);
 		   
-		   tvCharLeft.setText(String.valueOf(tweetCharCountLeft));
+		   mTvCharLeft.setText(String.valueOf(mTweetCharCountLeft));
 	   }
 	  });
 		
-		btnTweet.setOnClickListener(this);
-		btnCancel.setOnClickListener(this);
+		mBtnTweet.setOnClickListener(this);
+		mBtnCancel.setOnClickListener(this);
 	}
 	
 	// ----------------- post the tweet
-		private void postTweet(){
-			if(!isDeviceConnected()){
-				Toast.makeText(getDialog().getContext(), "Notwork is not available", Toast.LENGTH_SHORT);
-				return;
-			}
-			String tweetText = etTweet.getText().toString();
-			if(tweetText.isEmpty()){
-				Toast.makeText(getDialog().getContext(), "Compose and then Tweet", Toast.LENGTH_SHORT).show();
-				return;
-			}
-
-			client.postUpdateTweet(tweetText, inReplyId, new JsonHttpResponseHandler(){
-				@Override
-				public void onSuccess(JSONObject json) {
-					Log.d("debug:","user-->> tweet posted!!!");
-					Tweet newTweet = Tweet.fromJSON(json);
-					listener.onPostTweet(true, newTweet);
-				}
-				
-				@Override
-				public void onFailure(Throwable e, String s) {
-					Log.d("debug:",e.toString());
-					Log.d("debug:",s.toString());
-				}
-			});
+	private void postTweet(){
+		if(!isDeviceConnected()){
+			Toast.makeText(getDialog().getContext(), "Notwork is not available", Toast.LENGTH_SHORT);
+			return;
+		}
+		String tweetText = mEtTweet.getText().toString();
+		if(tweetText.isEmpty()){
+			Toast.makeText(getDialog().getContext(), "Compose and then Tweet", Toast.LENGTH_SHORT).show();
+			return;
 		}
 
-		private void showConfirmationAlert(){
-			AlertDialog.Builder alertDialog = new AlertDialog.Builder(getDialog().getContext());
-		    alertDialog.setTitle(getResources().getString(R.string.new_tweet));
-		    alertDialog.setMessage(getResources().getString(R.string.tweet_discard_message));
-		    alertDialog.setIcon(R.drawable.round_button_twitter);
-		
-		    // Setting Positive "Yes" Button
-		    alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog,int which) {
-		        	dismiss();// closing this activity.
-		        }
-		    });
-		
-		    // Setting Negative "NO" Button
-		    alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
-		        public void onClick(DialogInterface dialog, int which) {	        
-		        dialog.cancel();
-		        }
-		    });
+		mTwitterClient.postUpdateTweet(tweetText, inReplyId, new JsonHttpResponseHandler(){
+			@Override
+			public void onSuccess(JSONObject json) {
+				Log.d("debug:","user-->> tweet posted!!!");
+				Tweet newTweet = Tweet.fromJSON(json);
+				listener.onPostTweet(true, newTweet);
+			}
+			
+			@Override
+			public void onFailure(Throwable e, String s) {
+				Log.d("debug:",e.toString());
+				Log.d("debug:",s.toString());
+			}
+		});
+	}
 
-		    // Showing Alert Message
-		    alertDialog.show();
-		}
+	private void showConfirmationAlert(){
+		AlertDialog.Builder alertDialog = new AlertDialog.Builder(getDialog().getContext());
+	    alertDialog.setTitle(getResources().getString(R.string.new_tweet));
+	    alertDialog.setMessage(getResources().getString(R.string.tweet_discard_message));
+	    alertDialog.setIcon(R.drawable.round_button_twitter);
+	
+	    // Setting Positive "Yes" Button
+	    alertDialog.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog,int which) {
+	        	dismiss();// closing this activity.
+	        }
+	    });
+	
+	    // Setting Negative "NO" Button
+	    alertDialog.setNegativeButton("No", new DialogInterface.OnClickListener() {
+	        public void onClick(DialogInterface dialog, int which) {	        
+	        dialog.cancel();
+	        }
+	    });
+
+	    // Showing Alert Message
+	    alertDialog.show();
+	}
 		
 	@Override
 	public void onAttach(Activity activity) {
@@ -234,7 +223,7 @@ public class ComposeTweetFragment extends DialogFragment implements OnClickListe
         	dismiss();
             break;
         case R.id.btnCancel:
-        	String tweetText = etTweet.getText().toString();
+        	String tweetText = mEtTweet.getText().toString();
         	if(tweetText.length()>0){
         		showConfirmationAlert();
         	} else {
@@ -245,7 +234,7 @@ public class ComposeTweetFragment extends DialogFragment implements OnClickListe
     }
 	
 	public boolean isChanged(){
-		return bOptionsChanged;
+		return mOptionsChanged;
 	}
 	
 	// Network handling helpers

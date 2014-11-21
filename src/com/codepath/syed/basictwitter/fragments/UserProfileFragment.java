@@ -34,7 +34,6 @@ public class UserProfileFragment extends Fragment {
     private TextView tvFollowing;
     private TextView tvFollowers;
     private ImageView ivProfileBackgroundImage;
-    private String userName;
 
     UserProfileFragment(){
     	// empty constructor

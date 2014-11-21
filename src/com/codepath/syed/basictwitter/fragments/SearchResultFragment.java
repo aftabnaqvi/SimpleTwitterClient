@@ -30,17 +30,17 @@ public class SearchResultFragment extends TweetListFragment {
         // Check if we have already fetch tweets once.
         // if we already fetched than fetch the next set of tweets
         // from (max_id - 1). max_id is inclusive so you need decrement it one.
-        if (tweets.size() > 0){
-        	lastTweetId = String.valueOf(tweets.get(tweets.size() - 1).getUid() - 1) ;
+        if (mTweets.size() > 0){
+        	mLastTweetId = String.valueOf(mTweets.get(mTweets.size() - 1).getUid() - 1) ;
         }
         
 		if(bRefresh){
-			tweets.clear();
-			aTweets.clear();
-			lastTweetId = null;
+			mTweets.clear();
+			mTweetsAdapter.clear();
+			mLastTweetId = null;
 		}
 		
-		client.getSearchTweets(query, lastTweetId, new JsonHttpResponseHandler(){
+		mTwitterClient.getSearchTweets(query, mLastTweetId, new JsonHttpResponseHandler(){
 			@Override
 			public void onSuccess(JSONObject jsonObject) {
 				if (!jsonObject.isNull("statuses")){
@@ -52,11 +52,11 @@ public class SearchResultFragment extends TweetListFragment {
                     }
                     addAll(Tweet.fromJSONArray(jsonArray));
                     progressBar.setVisibility(View.GONE);
-//	                for (Tweet tweet : tweets) {
-//	                    tweet.saveTweet();
-//	                }
+	                for (Tweet tweet : mTweets) {
+	                    tweet.saveTweet();
+	                }
 				}
-				lvTweets.onRefreshComplete(); 
+				mLvTweets.onRefreshComplete(); 
 			}
 
 			@Override

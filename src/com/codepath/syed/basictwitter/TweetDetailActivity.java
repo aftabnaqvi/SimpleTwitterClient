@@ -7,8 +7,6 @@ import org.json.JSONObject;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
@@ -19,32 +17,27 @@ import android.widget.TextView;
 
 import com.codepath.syed.basictwitter.fragments.ComposeTweetFragment;
 import com.codepath.syed.basictwitter.fragments.HomeTimelineFragment;
-import com.codepath.syed.basictwitter.fragments.UserTimelineFragment;
 import com.codepath.syed.basictwitter.models.Tweet;
-import com.codepath.syed.basictwitter.models.User;
 import com.codepath.syed.utils.Utility;
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class TweetDetailActivity extends FragmentActivity implements ComposeFragmentListener{//implements OnItemClickListener{
 
-    private Tweet tweet;
-    private User user;
-    private ImageView ivRetweetedIcon;
-    private TextView tvRetweetBy;
-    private ImageView ivProfileImage;
-    private TextView tvUsername;
-    private TextView tvScreenname;
-    private TextView tvStatus;
-    private TextView tvCreatedAt;
-    private ImageView ivMedia;
-    private TextView tvRetweet;
-    private TextView tvFavCount;
-    private ImageView ivRetweet;
-    private ImageView ivFavCount;
-    private TwitterClient client;
-    private final int REQUEST_CODE = 20;
-
+    private Tweet 			mTweet;
+    private ImageView 		mIvRetweetedIcon;
+    private TextView 		mTvRetweetBy;
+    private ImageView 		mIvProfileImage;
+    private TextView 		mTvUsername;
+    private TextView 		mTvScreenname;
+    private TextView 		mTvStatus;
+    private TextView 		mTvCreatedAt;
+    private ImageView 		mIvMedia;
+    private TextView 		mTvRetweet;
+    private TextView 		mTvFavCount;
+    private ImageView 		mIvRetweet;
+    private ImageView 		mIvFavCount;
+    private TwitterClient 	client;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,68 +50,66 @@ public class TweetDetailActivity extends FragmentActivity implements ComposeFrag
 
     private void setupViews() {
     	try{
-    		tweet = (Tweet) getIntent().getParcelableExtra("tweet"); //- still working on it.
+    		mTweet = (Tweet) getIntent().getParcelableExtra("tweet"); 
     	} catch(Exception e){
     		e.printStackTrace();
     	}
-        ivRetweetedIcon = (ImageView)findViewById(R.id.ivRetweetedIcon);
-        tvRetweetBy = (TextView)findViewById(R.id.tvRetweetedBy);
-        ivProfileImage = (ImageView)findViewById(R.id.ivProfileImage);
-        tvUsername = (TextView)findViewById(R.id.tvUsername);
-        tvScreenname = (TextView)findViewById(R.id.tvScreenname);
-        tvStatus = (TextView)findViewById(R.id.tvStatus);
-        tvCreatedAt = (TextView)findViewById(R.id.tvCreatedAt);
-        ivMedia = (ImageView)findViewById(R.id.ivMedia);
-        ivRetweet = (ImageView)findViewById(R.id.ivRetweet);
-        tvRetweet = (TextView)findViewById(R.id.tvRetweet);
-        ivFavCount = (ImageView)findViewById(R.id.ivFavCount);
-        tvFavCount = (TextView)findViewById(R.id.tvFavCount);
+    	
+    	mIvRetweetedIcon = (ImageView)findViewById(R.id.ivRetweetedIcon);
+    	mTvRetweetBy 	 = (TextView)findViewById(R.id.tvRetweetedBy);
+    	mIvProfileImage  = (ImageView)findViewById(R.id.ivProfileImage);
+    	mTvUsername 	 = (TextView)findViewById(R.id.tvUsername);
+    	mTvScreenname 	 = (TextView)findViewById(R.id.tvScreenname);
+    	mTvStatus 		 = (TextView)findViewById(R.id.tvStatus);
+    	mTvCreatedAt 	 = (TextView)findViewById(R.id.tvCreatedAt);
+    	mIvMedia 		 = (ImageView)findViewById(R.id.ivMedia);
+    	mIvRetweet 		 = (ImageView)findViewById(R.id.ivRetweet);
+        mTvRetweet 		 = (TextView)findViewById(R.id.tvRetweet);
+        mIvFavCount 	 = (ImageView)findViewById(R.id.ivFavCount);
+        mTvFavCount 	 = (TextView)findViewById(R.id.tvFavCount);
 
-        if (tweet.getRetweetedStatus() != null){
-            ivRetweetedIcon.setVisibility(View.VISIBLE);
-            tvRetweetBy.setText(tweet.getUser().getName());
-            tvRetweetBy.setVisibility(View.VISIBLE);
-            tweet = tweet.getRetweetedStatus();
+        if (mTweet.getRetweetedStatus() != null){
+        	mIvRetweetedIcon.setVisibility(View.VISIBLE);
+        	mTvRetweetBy.setText(mTweet.getUser().getName());
+            mTvRetweetBy.setVisibility(View.VISIBLE);
+            mTweet = mTweet.getRetweetedStatus();
         } else {
-            ivRetweetedIcon.setVisibility(View.GONE);
-            tvRetweetBy.setVisibility(View.GONE);
-
+        	mIvRetweetedIcon.setVisibility(View.GONE);
+        	mTvRetweetBy.setVisibility(View.GONE);
         }
 
-        ImageLoader.getInstance().displayImage(tweet.getUser().getProfileImageUrl(), ivProfileImage);
-        tvUsername.setText(tweet.getUser().getName());
-        tvScreenname.setText(tweet.getUser().getScreenName());
-        tvStatus.setText(Html.fromHtml(tweet.getBodyWithoutMediaUrl()));
-        tvStatus.setMovementMethod(LinkMovementMethod.getInstance());
-        tvCreatedAt.setText(Utility.getRelativeTimeAgo(tweet.getCreatedAt()));
+        ImageLoader.getInstance().displayImage(mTweet.getUser().getProfileImageUrl(), mIvProfileImage);
+        mTvUsername.setText(mTweet.getUser().getName());
+        mTvScreenname.setText(mTweet.getUser().getScreenName());
+        mTvStatus.setText(Html.fromHtml(mTweet.getBodyWithoutMediaUrl()));
+        mTvStatus.setMovementMethod(LinkMovementMethod.getInstance());
+        mTvCreatedAt.setText(Utility.getRelativeTimeAgo(mTweet.getCreatedAt()));
 
-        if (tweet.isRetweeted()){
-            ivRetweet.setImageResource(R.drawable.ic_tweet_action_inline_retweet_on);
+        if (mTweet.isRetweeted()){
+        	mIvRetweet.setImageResource(R.drawable.ic_tweet_action_inline_retweet_on);
         } else {
-            ivRetweet.setImageResource(R.drawable.ic_tweet_action_inline_retweet_off);
+        	mIvRetweet.setImageResource(R.drawable.ic_tweet_action_inline_retweet_off);
         }
-        tvRetweet.setText(String.valueOf(tweet.getReTweetCount()));
+        mTvRetweet.setText(String.valueOf(mTweet.getReTweetCount()));
 
-        if (tweet.isFavorited()){
-            ivFavCount.setImageResource(R.drawable.ic_tweet_action_inline_favorite_on);
+        if (mTweet.isFavorited()){
+        	mIvFavCount.setImageResource(R.drawable.ic_tweet_action_inline_favorite_on);
         } else {
-            ivFavCount.setImageResource(R.drawable.ic_tweet_action_inline_favorite_off);
+        	mIvFavCount.setImageResource(R.drawable.ic_tweet_action_inline_favorite_off);
         }
-        tvFavCount.setText(String.valueOf(tweet.getFavoriteCount()));
+        mTvFavCount.setText(String.valueOf(mTweet.getFavoriteCount()));
 
-        if (tweet.getTwitterMediaUrls() != null && tweet.getTwitterMediaUrls().size() > 0){
-        	ivMedia.setVisibility(View.VISIBLE);
-            ImageLoader.getInstance().displayImage(tweet.getTwitterMediaUrls().get(0).getMediaUrlHttps(), ivMedia);
-            
+        if (mTweet.getTwitterMediaUrls() != null && mTweet.getTwitterMediaUrls().size() > 0){
+        	mIvMedia.setVisibility(View.VISIBLE);
+            ImageLoader.getInstance().displayImage(mTweet.getTwitterMediaUrls().get(0).getMediaUrlHttps(), mIvMedia);
         } else {
-            ivMedia.setVisibility(View.GONE);
+        	mIvMedia.setVisibility(View.GONE);
         }
-
     }
 
     public void replyTweet(View view) {
-        String screenName = "@" + tweet.getUser().getScreenName() + " ";
-        ComposeTweetFragment composeFragment =  ComposeTweetFragment.newInstance(screenName, tweet.getUid(), tweet.getUser());
+        String screenName = "@" + mTweet.getUser().getScreenName() + " ";
+        ComposeTweetFragment composeFragment =  ComposeTweetFragment.newInstance(screenName, mTweet.getUid(), mTweet.getUser());
         composeFragment.show(getSupportFragmentManager(),"compose_fragment");
     }
 
@@ -143,51 +134,49 @@ public class TweetDetailActivity extends FragmentActivity implements ComposeFrag
     }
 
 	private void updateRetweet(){
-        if (tweet.isRetweeted()) {
-            ivRetweet.setImageResource(R.drawable.ic_tweet_action_inline_retweet_on);
+        if (mTweet.isRetweeted()) {
+        	mIvRetweet.setImageResource(R.drawable.ic_tweet_action_inline_retweet_on);
         } else {
-            ivRetweet.setImageResource(R.drawable.ic_tweet_action_inline_retweet_off);
+        	mIvRetweet.setImageResource(R.drawable.ic_tweet_action_inline_retweet_off);
         }
-        tvRetweet.setText(String.valueOf(tweet.getReTweetCount()));
+        mTvRetweet.setText(String.valueOf(mTweet.getReTweetCount()));
     }
 
     private void updateFavorites(){
-        if (tweet.isFavorited()) {
-            ivFavCount.setImageResource(R.drawable.ic_tweet_action_inline_favorite_on);
+        if (mTweet.isFavorited()) {
+        	mIvFavCount.setImageResource(R.drawable.ic_tweet_action_inline_favorite_on);
         } else {
-            ivFavCount.setImageResource(R.drawable.ic_tweet_action_inline_favorite_off);
+        	mIvFavCount.setImageResource(R.drawable.ic_tweet_action_inline_favorite_off);
         }
-        tvFavCount.setText(String.valueOf(tweet.getFavoriteCount()));
+        mTvFavCount.setText(String.valueOf(mTweet.getFavoriteCount()));
     }
 
     public void onReTweetClick(View view) {
-        if (!tweet.isRetweeted()) {
-            client.postRetweet(tweet.getUid(), new JsonHttpResponseHandler() {
+        if (!mTweet.isRetweeted()) {
+            client.postRetweet(mTweet.getUid(), new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(JSONObject jsonObject) {
-                    tweet = Tweet.fromJSON(jsonObject);
+                	mTweet = Tweet.fromJSON(jsonObject);
                     updateRetweet();
                 }
             });
-
         }
     }
 
     public void onFavoriteClick(View view) {
-
-        if (tweet.isFavorited()){
-            client.postFavoriteRemoved(tweet.getUid(),new JsonHttpResponseHandler(){
+        if (mTweet.isFavorited()){
+            client.postFavoriteRemoved(mTweet.getUid(),new JsonHttpResponseHandler(){
                 @Override
                 public void onSuccess(JSONObject jsonObject) {
-                    tweet = Tweet.fromJSON(jsonObject);
+                	mTweet = Tweet.fromJSON(jsonObject);
                     updateFavorites();
                 }
             });
         } else {
-            client.postFavoriteCreate(tweet.getUid(), new JsonHttpResponseHandler() {
+            client.postFavoriteCreate(mTweet.getUid(), new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(JSONObject jsonObject) {
-                    tweet = Tweet.fromJSON(jsonObject);
+                	mTweet = Tweet.fromJSON(jsonObject);
                     updateFavorites();
                 }
             });
@@ -196,7 +185,7 @@ public class TweetDetailActivity extends FragmentActivity implements ComposeFrag
 
     public void onProfileImageClick(View view) {
         Intent i = new Intent(this, UserProfileActivity.class);
-        i.putExtra("user", tweet.getUser());
+        i.putExtra("user", mTweet.getUser());
         startActivity(i);
     }
 

@@ -28,32 +28,29 @@ public class HomeTimelineFragment extends TweetListFragment {
 		// Check if we have already fetch tweets once.
         // if we already fetched than fetch the next set of tweets
         // from (max_id - 1). max_id is inclusive so you need decrement it one.
-        if (tweets.size() > 0){
-        	lastTweetId = String.valueOf(tweets.get(tweets.size() - 1).getUid() - 1) ;
+        if (mTweets.size() > 0){
+        	mLastTweetId = String.valueOf(mTweets.get(mTweets.size() - 1).getUid() - 1) ;
         }
         
 		if(bRefresh){
-			tweets.clear();
-			aTweets.clear();
-			lastTweetId = null;
+			mTweets.clear();
+			mTweetsAdapter.clear();
+			mLastTweetId = null;
 		}
 		
-		client.getHomeTimeline(lastTweetId, new JsonHttpResponseHandler(){
+		mTwitterClient.getHomeTimeline(mLastTweetId, new JsonHttpResponseHandler(){
 			@Override
 			public void onSuccess(JSONArray jsonArray) {
 				addAll(Tweet.fromJSONArray(jsonArray));
 				progressBar.setVisibility(View.GONE);
-				Log.d("debug: tweets size", String.valueOf(tweets.size()));
-				lvTweets.onRefreshComplete(); 
+				Log.d("debug: tweets size", String.valueOf(mTweets.size()));
+				mLvTweets.onRefreshComplete(); 
 				
-				for (Tweet tweet : tweets){
+				for (Tweet tweet : mTweets){
                     tweet.saveTweet();
                 }
 			}
 
-			/* (non-Javadoc)
-			 * @see com.loopj.android.http.AsyncHttpResponseHandler#onFailure(java.lang.Throwable, java.lang.String)
-			 */
 			@Override
 			public void onFailure(Throwable e, String s) {
 				Log.d("debug:", e.toString());
@@ -64,7 +61,7 @@ public class HomeTimelineFragment extends TweetListFragment {
 	}
     
 	private void getFromDB(){
-        aTweets.clear();
-        aTweets.addAll(Tweet.getAll());
+		mTweetsAdapter.clear();
+		mTweetsAdapter.addAll(Tweet.getAll());
     }
 }

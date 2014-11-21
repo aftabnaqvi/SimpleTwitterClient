@@ -28,16 +28,17 @@ import com.codepath.syed.utils.Utility;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
 // should use FragmentActivity or ActionBarActivity
-public class TimelineActivity extends FragmentActivity implements ComposeFragmentListener{//, OnItemClickListener{
-	protected TwitterClient client;
-	private User currentUser;
+public class TimelineActivity extends FragmentActivity implements ComposeFragmentListener{
+	protected TwitterClient mTwitterClient;
+	private User mCurrentUser;
 	private SearchView searchView;;
 	private HomeTimelineFragment mHomeTimelineFragment;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_timeline);
-		client = TwitterApplication.getRestClient();
+		mTwitterClient = TwitterApplication.getRestClient();
 		getCurrentUserDetails();
 		setupTabs();
 		getSupportFragmentManager().executePendingTransactions();
@@ -74,48 +75,49 @@ public class TimelineActivity extends FragmentActivity implements ComposeFragmen
 		actionBar.addTab(mentions);
 	}
 
-	 private void getCurrentUserDetails(){
-			if( !isDeviceConnected() ){
-				Toast.makeText(this, "Netowrk error", Toast.LENGTH_SHORT).show();
-				return;
+	private void getCurrentUserDetails(){
+		if( !isDeviceConnected() ){
+			Toast.makeText(this, "Netowrk error", Toast.LENGTH_SHORT).show();
+			return;
+		}
+			
+		mTwitterClient.getAccountDetails(new JsonHttpResponseHandler(){
+			@Override
+			public void onSuccess(JSONObject json) {
+				mCurrentUser = User.fromJson(json);
+				saveUser();
+				Log.d("debug","User -->> " + json.toString());
 			}
-			
-			client.getAccountDetails(new JsonHttpResponseHandler(){
-				@Override
-				public void onSuccess(JSONObject json) {
-					currentUser = User.fromJson(json);
-					saveUser();
-					Log.d("debug","User -->> " + json.toString());
-				}
 
-				@Override
-				public void onFailure(Throwable e, String s) {
-					Log.d("debug:", e.toString());
-					Log.d("debug:", s);
-				}
-			});
-		}
-	// Network handling helpers
-	    protected boolean isDeviceConnected(){
-	    	if(Utility.isNetworkAvailable(this) == false){
-	    		getActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
-	    		getActionBar().setTitle(R.string.network_error);
-				Toast.makeText(this.getApplicationContext(), "Network Error.", Toast.LENGTH_SHORT).show();
-	        	return false; 
-	        }
-	    	
-	    	return true;
-	    }
+			@Override
+			public void onFailure(Throwable e, String s) {
+				Log.d("debug:", e.toString());
+				Log.d("debug:", s);
+			}
+		});
+	}
+	 
+ 	// Network handling helpers
+    protected boolean isDeviceConnected(){
+    	if(Utility.isNetworkAvailable(this) == false){
+    		getActionBar().setBackgroundDrawable(new ColorDrawable(Color.RED));
+    		getActionBar().setTitle(R.string.network_error);
+			Toast.makeText(this.getApplicationContext(), "Network Error.", Toast.LENGTH_SHORT).show();
+        	return false; 
+        }
+    	
+    	return true;
+    }
 
-	  //---------------------- store current user settings in share preferences
-	    private void saveUser(){
-			SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
-			
-			editor.putString("name", currentUser.getName());
-			editor.putString("screen_name", currentUser.getScreenName());
-			editor.putString("profile_image_url", currentUser.getProfileImageUrl());
-			editor.commit();
-		}
+    //---------------------- store current user settings in share preferences
+    private void saveUser(){
+		SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(this).edit();
+		
+		editor.putString("name", mCurrentUser.getName());
+		editor.putString("screen_name", mCurrentUser.getScreenName());
+		editor.putString("profile_image_url", mCurrentUser.getProfileImageUrl());
+		editor.commit();
+	}
 
 	//---------------------- action selection handlers
     @Override
@@ -124,13 +126,14 @@ public class TimelineActivity extends FragmentActivity implements ComposeFragmen
         final MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchItem.getActionView();
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
+            
+        	@Override
             public boolean onQueryTextSubmit(String query) {
             	//searchView.setIconified(true); // stopped calling twice... http://stackoverflow.com/questions/17874951/searchview-onquerytextsubmit-runs-twice-while-i-pressed-once
             	searchView.clearFocus();
             	Log.i("INFO: query....", query);
             	
-            	// FOLLOWING TWO LINE ARE ALOS WORKING...
+            	// FOLLOWING TWO LINE ARE ALSO WORKING...
                 //InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
                 //imm.hideSoftInputFromWindow(mSearchView.getWindowToken(), 0);
                
@@ -151,9 +154,9 @@ public class TimelineActivity extends FragmentActivity implements ComposeFragmen
     }
     
     private void searchTweets(String query) {
-    	Intent seach = new Intent(this, SearchResultActivity.class);
-    	seach.putExtra("query", query);
-    	startActivity(seach);
+    	Intent search = new Intent(this, SearchResultActivity.class);
+    	search.putExtra("query", query);
+    	startActivity(search);
 	}
     
     @Override
@@ -166,9 +169,10 @@ public class TimelineActivity extends FragmentActivity implements ComposeFragmen
 	      
 	    case R.id.view_profile:
 	    	Intent i = new Intent(this, UserProfileActivity.class);
-	    	i.putExtra("user", currentUser);
+	    	i.putExtra("user", mCurrentUser);
 	    	startActivity(i);
 	    	break;
+	    	
 	    default:
 	    	return super.onOptionsItemSelected(item);
 	    }
@@ -178,7 +182,7 @@ public class TimelineActivity extends FragmentActivity implements ComposeFragmen
     
     protected void showComposeTweetFragment(String tweetReplyTo){
     	FragmentManager fm = getSupportFragmentManager();
-    	ComposeTweetFragment fragment = ComposeTweetFragment.newInstance(tweetReplyTo, 0, currentUser);
+    	ComposeTweetFragment fragment = ComposeTweetFragment.newInstance(tweetReplyTo, 0, mCurrentUser);
     	
     	fragment.show(fm, "compose_tweet_fragment");
     }

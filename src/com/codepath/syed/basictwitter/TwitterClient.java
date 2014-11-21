@@ -136,7 +136,8 @@ public class TwitterClient extends OAuthBaseClient {
         client.post(apiUrl, handler);
     }
 
-    public void getSearchTweets(String query, String lastTweetId, JsonHttpResponseHandler handler) {
+    @SuppressWarnings("deprecation")
+	public void getSearchTweets(String query, String lastTweetId, JsonHttpResponseHandler handler) {
         String apiUrl = getApiUrl("search/tweets.json");
         RequestParams params = new RequestParams();
         if (query != null) {

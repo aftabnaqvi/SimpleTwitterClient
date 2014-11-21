@@ -18,42 +18,40 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.support.v4.app.DialogFragment;
+
 import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ComposeTweetActivity extends Activity {
 	
-	private TextView tvUsername;
-	private TextView tvScreenName;
-	private EditText etTweet;
-	private TextView tvCharLeft;
-	private ImageView ivProfileImage;
-	private int tweetCharCountLeft;
-	private int totalCount;
-	private TwitterClient client;
+	private TextView mTvUsername;
+	private TextView mTvScreenName;
+	private EditText mEtTweet;
+	private ImageView mIvProfileImage;
+	private int mTweetCharCountLeft;
+	private int mTotalCount;
+	private TwitterClient mTwitterClient;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_compose_tweet);
-		//getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.mobile_banner));
-		client = TwitterApplication.getRestClient();
+		mTwitterClient = TwitterApplication.getRestClient();
 		setupViews();
 		
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 		
 		addListeners();
-		tweetCharCountLeft = 140;
-		totalCount = 140;
+		mTweetCharCountLeft = 140;
+		mTotalCount = 140;
 		invalidateOptionsMenu();
 	}
 
 	private void setupViews(){
-		tvUsername = (TextView)findViewById(R.id.tvUsername);
-		tvScreenName = (TextView)findViewById(R.id.tvCurrentUserScreenName);
-		etTweet = (EditText)findViewById(R.id.etTweet);
-		ivProfileImage = (ImageView)findViewById(R.id.ivCurrentUserProfileImage);
+		mTvUsername = (TextView)findViewById(R.id.tvUsername);
+		mTvScreenName = (TextView)findViewById(R.id.tvCurrentUserScreenName);
+		mEtTweet = (EditText)findViewById(R.id.etTweet);
+		mIvProfileImage = (ImageView)findViewById(R.id.ivCurrentUserProfileImage);
 		
 	 	String userName = null;
 	 	String screenName = null;
@@ -68,46 +66,44 @@ public class ComposeTweetActivity extends Activity {
 			Log.e("ERORR:", "preferences object is NULL");
 		}
 		
-		if( tvUsername != null)
-			tvUsername.setText(userName);
+		if( mTvUsername != null)
+			mTvUsername.setText(userName);
 		
-		if(tvScreenName != null)
-			tvScreenName.setText("@" + screenName);
+		if(mTvScreenName != null)
+			mTvScreenName.setText("@" + screenName);
 		
-		if(ivProfileImage != null){
+		if(mIvProfileImage != null){
 			ImageLoader imageLoader = ImageLoader.getInstance();
-			imageLoader.displayImage(profileImageUrl, ivProfileImage);
+			imageLoader.displayImage(profileImageUrl, mIvProfileImage);
 		}
 	}
 	
 	private void addListeners(){
-		etTweet.addTextChangedListener(new TextWatcher() {
-
-			   public void afterTextChanged(Editable s) { 
-			   }
-
-			   public void beforeTextChanged(CharSequence s, int start,
-			     int count, int after) {
-			   }
-
-			   public void onTextChanged(CharSequence s, int start,
-			     int before, int count) {
-				   //Log.d("debug:", "str: " + s + " start: " + start + " before: " + before + " count: " + count);
-				   String tweet = etTweet.getText().toString();
-				   tweetCharCountLeft = totalCount-tweet.length();;
-				   invalidateOptionsMenu();
-			   }
-			  });
+		mEtTweet.addTextChangedListener(new TextWatcher() {
+			public void afterTextChanged(Editable s) { 
+			}
+		
+			public void beforeTextChanged(CharSequence s, int start,
+				int count, int after) {
+			}
+		
+			public void onTextChanged(CharSequence s, int start,
+				int before, int count) {
+				//Log.d("debug:", "str: " + s + " start: " + start + " before: " + before + " count: " + count);
+				String tweet = mEtTweet.getText().toString();
+				mTweetCharCountLeft = mTotalCount-tweet.length();;
+				invalidateOptionsMenu();
+			}
+		});
 	}
+
 	// menus...
-	
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		// TODO Auto-generated method stub
 		MenuItem tweetCharCount = menu.findItem(R.id.tweet_char_left);
-		tweetCharCount.setTitle(String.valueOf(tweetCharCountLeft));
+		tweetCharCount.setTitle(String.valueOf(mTweetCharCountLeft));
 		MenuItem tweet = menu.findItem(R.id.tweet);
-		if(tweetCharCountLeft<0){
+		if(mTweetCharCountLeft<0){
 			tweet.setEnabled(false);
 		} else {
 			tweet.setEnabled(true);
@@ -115,28 +111,20 @@ public class ComposeTweetActivity extends Activity {
 	    return true;
 	}
 	
-	
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onCreateOptionsMenu(android.view.Menu)
-	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.menu_compose_tweet_activity, menu);
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see android.app.Activity#onOptionsItemSelected(android.view.MenuItem)
-	 */
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
-	    // action with ID action_refresh was selected
 	    case R.id.tweet:
 	    	postTweet();
 	    	break;
 	    case android.R.id.home:
-	    	String tweet = etTweet.getText().toString();
+	    	String tweet = mEtTweet.getText().toString();
 	    	if(tweet.length()>1){
 	    		// show an alert to discard the tweet.
 	    		showConfirmationAlert();
@@ -151,14 +139,14 @@ public class ComposeTweetActivity extends Activity {
 		return true;
 	}
 
-	// ----------------- post the tweet
+	// ----------------- post a Tweet
 	private void postTweet(){
-		String tweetText = etTweet.getText().toString();
+		String tweetText = mEtTweet.getText().toString();
 		if(tweetText.isEmpty()){
 			Toast.makeText(getBaseContext(), "Compose and then Tweet", Toast.LENGTH_SHORT).show();
 			return;
 		}
-		client.postUpdateTweet(tweetText, 0, new JsonHttpResponseHandler(){
+		mTwitterClient.postUpdateTweet(tweetText, 0, new JsonHttpResponseHandler(){
 			@Override
 			public void onSuccess(JSONObject json) {
 				Log.d("debug:","user-->> posted!!!");

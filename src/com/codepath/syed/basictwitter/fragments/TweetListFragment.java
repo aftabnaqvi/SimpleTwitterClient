@@ -38,29 +38,28 @@ import eu.erikw.PullToRefreshListView;
 import eu.erikw.PullToRefreshListView.OnRefreshListener;
 
 public abstract class TweetListFragment extends Fragment {
-	protected TwitterClient client;
-	protected ArrayList<Tweet> tweets;
-	protected  TweetArrayAdapter aTweets;
-	protected  PullToRefreshListView lvTweets;
-	protected  String lastTweetId = null;
-	//protected  long max_id;
-	protected  User user;
-	protected  static int REQUEST_CODE = 200;
+	protected TwitterClient mTwitterClient;
+	protected ArrayList<Tweet> mTweets;
+	protected TweetArrayAdapter mTweetsAdapter;
+	protected PullToRefreshListView mLvTweets;
+	protected String mLastTweetId = null;
+	protected User user;
+	protected static int REQUEST_CODE = 200;
 	protected boolean requestFetchDataInProgress;
-	private TextView selectedTvRetweet;
-	private TextView selectedTvFavorite;
+	protected TextView selectedTvRetweet;
+	protected TextView selectedTvFavorite;
 	protected ProgressBar progressBar;
-	private Tweet selectedTweet;
-	private int selectedPosition;
+	protected Tweet selectedTweet;
+	protected int selectedPosition;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		client = TwitterApplication.getRestClient();
+		mTwitterClient = TwitterApplication.getRestClient();
 		requestFetchDataInProgress = false;
-		tweets = new ArrayList<Tweet>();
-		aTweets = new TweetArrayAdapter(getActivity(), tweets); // use getActivity very carefully... 
+		mTweets = new ArrayList<Tweet>();
+		mTweetsAdapter = new TweetArrayAdapter(getActivity(), mTweets); // use getActivity very carefully... 
 		
 		 setHasOptionsMenu(true);
 	}
@@ -72,15 +71,15 @@ public abstract class TweetListFragment extends Fragment {
 		View view =	inflater.inflate(R.layout.fragment_tweet_list, container, false); // false mean, don't attach the view but do it later.
 		
 		// Assign our view references		
-		lvTweets = (PullToRefreshListView)view.findViewById(R.id.lvTweets);
-		lvTweets.setAdapter(aTweets);
+		mLvTweets = (PullToRefreshListView)view.findViewById(R.id.lvTweets);
+		mLvTweets.setAdapter(mTweetsAdapter);
 		
 		progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 		progressBar.setVisibility(View.VISIBLE);
 		//getActivity().getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.mobile_banner));
 		
 		// Attach the listener to the AdapterView onCreate
-		lvTweets.setOnScrollListener(new EndlessScrollListener() {
+		mLvTweets.setOnScrollListener(new EndlessScrollListener() {
 		    @Override
 		    public void onLoadMore(int page, int totalItemsCount) {
 		        // Triggered only when new data needs to be appended to the list
@@ -90,7 +89,7 @@ public abstract class TweetListFragment extends Fragment {
 		    }
 	    });
 
-		lvTweets.setOnRefreshListener(new OnRefreshListener() {
+		mLvTweets.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh() {
                 // Your code to refresh the list here.
@@ -101,12 +100,12 @@ public abstract class TweetListFragment extends Fragment {
         });
 		
 		//OnItemClickListener
-		lvTweets.setOnItemClickListener(new OnItemClickListener() {
+		mLvTweets.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
 				selectedPosition = position + 1;
 			     	long viewId = view.getId();
-			     	final Tweet tweet = (Tweet)aTweets.getItem(selectedPosition); // I don't know why position is coming as -1. but it is working for now.
+			     	final Tweet tweet = (Tweet)mTweetsAdapter.getItem(selectedPosition); // I don't know why position is coming as -1. but it is working for now.
 			         if (viewId == R.id.tvReply) {
 			         	
 			             Log.d("debug:", "tvReply Clicked");
@@ -135,7 +134,7 @@ public abstract class TweetListFragment extends Fragment {
 			             startActivity(i);
 			         } else {
 			         	Intent i = new Intent(getActivity(), TweetDetailActivity.class);
-		                Tweet tweet1 = tweets.get(position);
+		                Tweet tweet1 = mTweets.get(position);
 		                i.putExtra("tweet", tweet1);
 		                startActivity(i);
 			         }
@@ -193,7 +192,7 @@ public abstract class TweetListFragment extends Fragment {
     
 	public void onReTweetClick(View view) {
         if (selectedTweet.isRetweeted()) {
-            client.postStatusDestroy(selectedTweet.getUid(), new JsonHttpResponseHandler() {
+        	mTwitterClient.postStatusDestroy(selectedTweet.getUid(), new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(JSONObject jsonObject) {
                 	selectedTweet = Tweet.fromJSON(jsonObject);
@@ -201,7 +200,7 @@ public abstract class TweetListFragment extends Fragment {
                 }
             });
         } else {
-        	client.postRetweet(selectedTweet.getUid(), new JsonHttpResponseHandler() {
+        	mTwitterClient.postRetweet(selectedTweet.getUid(), new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(JSONObject jsonObject) {
                 	selectedTweet = Tweet.fromJSON(jsonObject);
@@ -215,7 +214,7 @@ public abstract class TweetListFragment extends Fragment {
     public void onFavoriteClick(View view) {
 
         if (selectedTweet.isFavorited()){
-            client.postFavoriteRemoved(selectedTweet.getUid(), new JsonHttpResponseHandler(){
+        	mTwitterClient.postFavoriteRemoved(selectedTweet.getUid(), new JsonHttpResponseHandler(){
                 @Override
                 public void onSuccess(JSONObject jsonObject) {
                 	selectedTweet = Tweet.fromJSON(jsonObject);
@@ -223,7 +222,7 @@ public abstract class TweetListFragment extends Fragment {
                 }
             });
         } else {
-            client.postFavoriteCreate(selectedTweet.getUid(), new JsonHttpResponseHandler() {
+        	mTwitterClient.postFavoriteCreate(selectedTweet.getUid(), new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(JSONObject jsonObject) {
                 	selectedTweet = Tweet.fromJSON(jsonObject);
@@ -253,24 +252,24 @@ public abstract class TweetListFragment extends Fragment {
 	// Delegate the adding to the internal adapter. // most recommended approach... minimize the code... 
 	// 
 	public void addAll(ArrayList<Tweet> tweets){
-		aTweets.addAll(tweets);
+		mTweetsAdapter.addAll(tweets);
 	}
 	
 	public void insert(Tweet newTweet){
-		aTweets.insert(newTweet, 0);
+		mTweetsAdapter.insert(newTweet, 0);
 		newTweet.save();
 	}
 	
 	public void updateFavorite(Tweet tweet){
-		aTweets.getItem(selectedPosition).setFavoriteCount(tweet.getFavoriteCount());
-		aTweets.getItem(selectedPosition).setFavorited(tweet.isFavorited());
-		aTweets.notifyDataSetChanged();
+		mTweetsAdapter.getItem(selectedPosition).setFavoriteCount(tweet.getFavoriteCount());
+		mTweetsAdapter.getItem(selectedPosition).setFavorited(tweet.isFavorited());
+		mTweetsAdapter.notifyDataSetChanged();
 	}
 	
 	public void updateRetweeted(Tweet tweet){
-		aTweets.getItem(selectedPosition).setReTweetCount(tweet.getReTweetCount());
-		aTweets.getItem(selectedPosition).setRetweeted(tweet.isRetweeted());
-		aTweets.notifyDataSetChanged();
+		mTweetsAdapter.getItem(selectedPosition).setReTweetCount(tweet.getReTweetCount());
+		mTweetsAdapter.getItem(selectedPosition).setRetweeted(tweet.isRetweeted());
+		mTweetsAdapter.notifyDataSetChanged();
 	}
 	
 	protected abstract void populateTimeline(boolean b);

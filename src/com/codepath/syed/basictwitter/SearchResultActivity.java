@@ -1,24 +1,22 @@
 package com.codepath.syed.basictwitter;
-import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
-import android.util.AttributeSet;
 import android.view.MenuItem;
-import android.view.View;
 
 import com.codepath.syed.basictwitter.fragments.SearchResultFragment;
 
 
 public class SearchResultActivity extends FragmentActivity {
-	private String query;
+	private String mQuery;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_search_results);
-		query = getIntent().getStringExtra("query");
-        SearchResultFragment searchResultFragment = SearchResultFragment.newInstance(query);
-        getActionBar().setTitle("Search: " + query);
+		mQuery = getIntent().getStringExtra("query");
+        SearchResultFragment searchResultFragment = SearchResultFragment.newInstance(mQuery);
+        getActionBar().setTitle("Search: " + mQuery);
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.flSearchResults, searchResultFragment);
         ft.commit();

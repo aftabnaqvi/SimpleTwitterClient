@@ -31,20 +31,15 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 	public static class ViewHolder{
 		private ImageView	ivProfileImage;
 		private TextView	tvName;
-		public TextView		tvScreenName;
+		private TextView	tvScreenName;
 		private TextView	tvTime;
-		private ImageView	ivTime;
 		private TextView	tvTweetBody;
-		private ImageView	ivReply;
 		private TextView 	tvReply;
 		private TextView	tvRetweet;
 		private TextView	tvFavorite;
 		private ImageView	ivTweetImage;
 	}
 
-	/* (non-Javadoc)
-	 * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
-	 */
 	@Override
 	public View getView(final int position, View convertView, final ViewGroup parent) {
 		// Get the data from position.

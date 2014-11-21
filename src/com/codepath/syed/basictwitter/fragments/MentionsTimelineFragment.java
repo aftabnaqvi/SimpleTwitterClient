@@ -2,14 +2,10 @@ package com.codepath.syed.basictwitter.fragments;
 
 import org.json.JSONArray;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 
-import com.codepath.syed.basictwitter.R;
-import com.codepath.syed.basictwitter.UserProfileActivity;
 import com.codepath.syed.basictwitter.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
@@ -33,8 +29,8 @@ public class MentionsTimelineFragment extends TweetListFragment {
 		// Check if we have already fetch tweets once.
         // if we already fetched than fetch the next set of tweets
         // from (max_id - 1). max_id is inclusive so you need decrement it one.
-        if (tweets.size() > 0){
-        	lastTweetId = String.valueOf(tweets.get(tweets.size() - 1).getUid() - 1) ;
+        if (mTweets.size() > 0){
+        	mLastTweetId = String.valueOf(mTweets.get(mTweets.size() - 1).getUid() - 1) ;
         }
         
 		if(requestFetchDataInProgress == true){
@@ -42,31 +38,25 @@ public class MentionsTimelineFragment extends TweetListFragment {
 			return;
 		}
 		if(bRefresh){
-			tweets.clear();
-			aTweets.clear();
-			lastTweetId = null;
+			mTweets.clear();
+			mTweetsAdapter.clear();
+			mLastTweetId = null;
 		}
 		requestFetchDataInProgress = true;
-		client.getMentionsTimeline(lastTweetId, new JsonHttpResponseHandler(){
-
-			/* (non-Javadoc)
-			 * @see com.loopj.android.http.JsonHttpResponseHandler#onSuccess(org.json.JSONArray)
-			 */
+		mTwitterClient.getMentionsTimeline(mLastTweetId, new JsonHttpResponseHandler(){
+			
 			@Override
 			public void onSuccess(JSONArray jsonArray) {
 				addAll(Tweet.fromJSONArray(jsonArray));
 				progressBar.setVisibility(View.GONE);
-				lvTweets.onRefreshComplete(); 
+				mLvTweets.onRefreshComplete(); 
 				
-				for (Tweet tweet : tweets){
+				for (Tweet tweet : mTweets){
                     tweet.saveTweet();
                 }
                 requestFetchDataInProgress = false;
 			}
 
-			/* (non-Javadoc)
-			 * @see com.loopj.android.http.AsyncHttpResponseHandler#onFailure(java.lang.Throwable, java.lang.String)
-			 */
 			@Override
 			public void onFailure(Throwable e, String s) {
 				Log.d("debug:", e.toString());
@@ -77,7 +67,7 @@ public class MentionsTimelineFragment extends TweetListFragment {
 	}
 	
     private void getFromDB(){
-        aTweets.clear();
-        aTweets.addAll(Tweet.getAll());
+    	mTweetsAdapter.clear();
+    	mTweetsAdapter.addAll(Tweet.getAll());
     }
 }

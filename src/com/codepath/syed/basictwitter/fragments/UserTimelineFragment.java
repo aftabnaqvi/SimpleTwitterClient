@@ -34,25 +34,25 @@ public class UserTimelineFragment extends TweetListFragment {
     	// Check if we have already fetch tweets once.
         // if we already fetched than fetch the next set of tweets
         // from (max_id - 1). max_id is inclusive so you need decrement it one.
-        if (tweets.size() > 0){
-        	lastTweetId = String.valueOf(tweets.get(tweets.size() - 1).getUid() - 1) ;
+        if (mTweets.size() > 0){
+        	mLastTweetId = String.valueOf(mTweets.get(mTweets.size() - 1).getUid() - 1) ;
         }
         
         if(refresh == true){
-			tweets.clear();
-			aTweets.clear();
-			lastTweetId = null;
+        	mTweets.clear();
+			mTweetsAdapter.clear();
+			mLastTweetId = null;
         }
         
         long userId = 0;
         if (user != null){
             userId = user.getUid();
         }
-        client.getUserTimeline(userId, lastTweetId, resultCount, new JsonHttpResponseHandler() {
+        mTwitterClient.getUserTimeline(userId, mLastTweetId, resultCount, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(JSONArray jsonArray) {
                 addAll(Tweet.fromJSONArray(jsonArray));
-                lvTweets.onRefreshComplete();
+                mLvTweets.onRefreshComplete();
             }
 
             @Override
