@@ -15,13 +15,13 @@ import com.activeandroid.annotation.Table;
 @Table(name="TwitterUrl")
 public class TwitterUrl implements Parcelable {
 	@Column (name = "Url")
-	private String url;
-    
+	private String mUrl;
+   
 	@Column (name = "expandedUrl")
-	private String expandedUrl;
+	private String mExpandedUrl;
     
 	@Column (name = "displayUrl")
-    private String displayUrl;
+    private String mDisplayUrl;
 
     public static ArrayList<TwitterUrl> fromJSONArray(JSONArray jsonArray) {
         ArrayList<TwitterUrl> twitterUrls = new ArrayList<TwitterUrl>();
@@ -45,9 +45,9 @@ public class TwitterUrl implements Parcelable {
     public static TwitterUrl fromJSON(JSONObject jsonObject) {
         TwitterUrl twitterUrl = new TwitterUrl();
         try {
-            twitterUrl.url = jsonObject.getString("url");
-            twitterUrl.expandedUrl = jsonObject.getString("expanded_url");
-            twitterUrl.displayUrl = jsonObject.getString("display_url");
+            twitterUrl.mUrl = jsonObject.getString("url");
+            twitterUrl.mExpandedUrl = jsonObject.getString("expanded_url");
+            twitterUrl.mDisplayUrl = jsonObject.getString("display_url");
         } catch (JSONException e){
             e.printStackTrace();
             return null;
@@ -57,19 +57,19 @@ public class TwitterUrl implements Parcelable {
     }
 
     public String gethtmlUrl(){
-        return "<a href=\"" + expandedUrl + "\">" + displayUrl + "</a>";
+        return "<a href=\"" + mExpandedUrl + "\">" + mDisplayUrl + "</a>";
     }
 
     public String getUrl() {
-        return url;
+        return mUrl;
     }
 
     public String getexpandedUrl() {
-        return expandedUrl;
+        return mExpandedUrl;
     }
 
     public String getdisplayUrl() {
-        return displayUrl;
+        return mDisplayUrl;
     }
 
     @Override
@@ -79,9 +79,9 @@ public class TwitterUrl implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.url);
-        dest.writeString(this.expandedUrl);
-        dest.writeString(this.displayUrl);
+        dest.writeString(this.mUrl);
+        dest.writeString(this.mExpandedUrl);
+        dest.writeString(this.mDisplayUrl);
     }
 
     public TwitterUrl() {
@@ -90,9 +90,9 @@ public class TwitterUrl implements Parcelable {
 
     private TwitterUrl(Parcel in) {
     	this();
-        this.url = in.readString();
-        this.expandedUrl = in.readString();
-        this.displayUrl = in.readString();
+        this.mUrl = in.readString();
+        this.mExpandedUrl = in.readString();
+        this.mDisplayUrl = in.readString();
     }
     
     public static final Parcelable.Creator<TwitterUrl> CREATOR = new Parcelable.Creator<TwitterUrl>() {

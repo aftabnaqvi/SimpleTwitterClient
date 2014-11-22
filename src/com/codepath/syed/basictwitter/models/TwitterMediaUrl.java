@@ -15,33 +15,31 @@ import com.activeandroid.annotation.Table;
 @Table(name = "TwitterMediaUrl")
 public class TwitterMediaUrl implements Parcelable {
 	@Column(name = "url")
-    private String url;
+    private String mUrl;
 	
 	@Column(name = "expandedUrl")
-    private String expandedUrl;
+    private String mExpandedUrl;
 	
 	@Column(name = "displayUrl")
-    private String displayUrl;
+    private String mDisplayUrl;
 	
 	@Column(name = "mediaUrlHTTPS")
-    private String mediaUrlHTTPS;
+    private String mMediaUrlHTTPS;
 
     public TwitterMediaUrl() {
     	super();
     }
-
-
     
     public String getExpandedUrl() {
-        return expandedUrl;
+        return mExpandedUrl;
     }
 
     public String getDisplayUrl() {
-        return displayUrl;
+        return mDisplayUrl;
     }
 
     public String getMediaUrlHttps() {
-        return mediaUrlHTTPS;
+        return mMediaUrlHTTPS;
     }
 
     // ----- factory methods
@@ -67,10 +65,10 @@ public class TwitterMediaUrl implements Parcelable {
     public static TwitterMediaUrl fromJSON(JSONObject jsonObject) {
         TwitterMediaUrl TwitterMediaUrl = new TwitterMediaUrl();
         try {
-            TwitterMediaUrl.url = jsonObject.getString("url");
-            TwitterMediaUrl.expandedUrl = jsonObject.getString("expanded_url");
-            TwitterMediaUrl.displayUrl = jsonObject.getString("display_url");
-            TwitterMediaUrl.mediaUrlHTTPS = jsonObject.getString("media_url_https");
+            TwitterMediaUrl.mUrl = jsonObject.getString("url");
+            TwitterMediaUrl.mExpandedUrl = jsonObject.getString("expanded_url");
+            TwitterMediaUrl.mDisplayUrl = jsonObject.getString("display_url");
+            TwitterMediaUrl.mMediaUrlHTTPS = jsonObject.getString("media_url_https");
         } catch (JSONException e){
             e.printStackTrace();
             return null;
@@ -80,11 +78,11 @@ public class TwitterMediaUrl implements Parcelable {
     }
 
     public String gethtmlUrl(){
-        return "<a href=\"" + mediaUrlHTTPS + "\">" + displayUrl + "</a>";
+        return "<a href=\"" + mMediaUrlHTTPS + "\">" + mDisplayUrl + "</a>";
     }
 
     public String getUrl() {
-        return url;
+        return mUrl;
     }
 
     @Override
@@ -94,19 +92,19 @@ public class TwitterMediaUrl implements Parcelable {
 
     private TwitterMediaUrl(Parcel in) {
     	this();
-        this.url = in.readString();
-        this.expandedUrl = in.readString();
-        this.displayUrl = in.readString();
-        this.mediaUrlHTTPS = in.readString();
+        this.mUrl = in.readString();
+        this.mExpandedUrl = in.readString();
+        this.mDisplayUrl = in.readString();
+        this.mMediaUrlHTTPS = in.readString();
     }
     
     @Override
     public void writeToParcel(Parcel dest, int flags) {
 
-        dest.writeString(this.url);
-        dest.writeString(this.expandedUrl);
-        dest.writeString(this.displayUrl);
-        dest.writeString(this.mediaUrlHTTPS);
+        dest.writeString(this.mUrl);
+        dest.writeString(this.mExpandedUrl);
+        dest.writeString(this.mDisplayUrl);
+        dest.writeString(this.mMediaUrlHTTPS);
     }
     
     public static final Parcelable.Creator<TwitterMediaUrl> CREATOR = new Parcelable.Creator<TwitterMediaUrl>() {

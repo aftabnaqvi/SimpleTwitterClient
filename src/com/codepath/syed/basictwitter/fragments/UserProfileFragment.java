@@ -26,14 +26,14 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class UserProfileFragment extends Fragment {
-	protected TwitterClient client;
-	protected User user;
-    private ImageView ivProfileImage;
-    private TextView tvProfileInfo;
-    private TextView tvTweets;
-    private TextView tvFollowing;
-    private TextView tvFollowers;
-    private ImageView ivProfileBackgroundImage;
+	private TwitterClient 	mTwitterClient;
+	private User 			mUser;
+    private ImageView 		mIvProfileImage;
+    private TextView 		mTvProfileInfo;
+    private TextView 		mTvTweets;
+    private TextView	 	mTvFollowing;
+    private TextView 		mTvFollowers;
+    private ImageView 		mIvProfileBackgroundImage;
 
     UserProfileFragment(){
     	// empty constructor
@@ -51,8 +51,8 @@ public class UserProfileFragment extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
-		client = TwitterApplication.getRestClient();
-		user = getArguments().getParcelable("user");
+		mTwitterClient = TwitterApplication.getRestClient();
+		mUser = getArguments().getParcelable("user");
 	}
 	
 	@Override
@@ -61,13 +61,13 @@ public class UserProfileFragment extends Fragment {
 		
 		View view =	inflater.inflate(R.layout.user_profile_fragment, container, false); // false mean, don't attach the view but do it later.
 		setupView(view);
-		getUserBanner(user.getScreenName(), view);
+		getUserBanner(mUser.getScreenName(), view);
 		
 		return view;
 	}
 
 	private void getUserBanner(String userName, final View view){
-		client.getUserProfileBanner(userName, new JsonHttpResponseHandler()
+		mTwitterClient.getUserProfileBanner(userName, new JsonHttpResponseHandler()
 		{
 			@Override
 			public void onSuccess(JSONObject json) {
@@ -90,51 +90,50 @@ public class UserProfileFragment extends Fragment {
 	}
 	
 	protected void setBanner(String bannerUrl, View view) {
-		ivProfileBackgroundImage = (ImageView)view.findViewById(R.id.ivBanner);
-		if(ivProfileBackgroundImage != null){
+		mIvProfileBackgroundImage = (ImageView)view.findViewById(R.id.ivBanner);
+		if(mIvProfileBackgroundImage != null){
 			Log.d("debug: ", "Setting Banner Image....with URL " + bannerUrl);
-			ImageLoader.getInstance().displayImage(bannerUrl, ivProfileBackgroundImage);
+			ImageLoader.getInstance().displayImage(bannerUrl, mIvProfileBackgroundImage);
 		}
 	}
 
 	private void setupView(View view) {
-		ivProfileImage 	= (ImageView)view.findViewById(R.id.ivProfileImg);
-		tvProfileInfo 	= (TextView)view.findViewById(R.id.tvProfileInfo);
-		tvTweets	 	= (TextView)view.findViewById(R.id.tvTweets);
-		tvFollowing 	= (TextView)view.findViewById(R.id.tvFollowing);
-		tvFollowers 	= (TextView)view.findViewById(R.id.tvFollowers);
+		mIvProfileImage = (ImageView)view.findViewById(R.id.ivProfileImg);
+		mTvProfileInfo 	= (TextView)view.findViewById(R.id.tvProfileInfo);
+		mTvTweets	 	= (TextView)view.findViewById(R.id.tvTweets);
+		mTvFollowing 	= (TextView)view.findViewById(R.id.tvFollowing);
+		mTvFollowers 	= (TextView)view.findViewById(R.id.tvFollowers);
 		
-
-		if(ivProfileImage != null && user.getProfileImageUrl ()!= null){
-			ImageLoader.getInstance().displayImage(user.getProfileImageUrl(), ivProfileImage);
+		if(mIvProfileImage != null && mUser.getProfileImageUrl ()!= null){
+			ImageLoader.getInstance().displayImage(mUser.getProfileImageUrl(), mIvProfileImage);
 		}
 
-		if(tvProfileInfo != null ){
-			tvProfileInfo.setText("");
-			SpannableString count = new SpannableString(String.valueOf(user.getName())); 
+		if(mTvProfileInfo != null ){
+			mTvProfileInfo.setText("");
+			SpannableString count = new SpannableString(String.valueOf(mUser.getName())); 
 			count.setSpan(new ForegroundColorSpan(Color.WHITE), 0, count.length(), 0);
 			count.setSpan(new StyleSpan(Typeface.BOLD), 0, count.length(), 0);
-			tvProfileInfo.append(count);
+			mTvProfileInfo.append(count);
 			
-			tvProfileInfo.append("\n" + "@" + user.getScreenName() + "\n" + user.getDescription());
+			mTvProfileInfo.append("\n" + "@" + mUser.getScreenName() + "\n" + mUser.getDescription());
 		}
 		
-		if(tvTweets != null){
-			tvTweets.setText("");
-			tvTweets.append(getFormattedStyle(user.getTweetsCount()));
-			tvTweets.append("\n" + "TWEETS");
+		if(mTvTweets != null){
+			mTvTweets.setText("");
+			mTvTweets.append(getFormattedStyle(mUser.getTweetsCount()));
+			mTvTweets.append("\n" + "TWEETS");
 		}
 		
-		if(tvFollowers != null){
-			tvFollowers.setText("");
-			tvFollowers.append(getFormattedStyle(user.getFollowersCount()));
-			tvFollowers.append("\n" + "FOLLOWERS");
+		if(mTvFollowers != null){
+			mTvFollowers.setText("");
+			mTvFollowers.append(getFormattedStyle(mUser.getFollowersCount()));
+			mTvFollowers.append("\n" + "FOLLOWERS");
 		}
 		
-		if(tvFollowing != null){
-			tvFollowing.setText("");
-			tvFollowing.append(getFormattedStyle(user.getFollowingCount()));
-			tvFollowing.append("\n" + "FOLLOWING");
+		if(mTvFollowing != null){
+			mTvFollowing.setText("");
+			mTvFollowing.append(getFormattedStyle(mUser.getFollowingCount()));
+			mTvFollowing.append("\n" + "FOLLOWING");
 		}
 	}
 

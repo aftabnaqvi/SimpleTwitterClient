@@ -35,19 +35,19 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ComposeTweetFragment extends DialogFragment implements OnClickListener{
 
-	private TextView mTvUsername;
-	private TextView mTvScreenName;
-	private EditText mEtTweet;
-	private ImageView mIvProfileImage;
-	private TextView mTvCharLeft;
-	private int mTweetCharCountLeft;
-	private int mTotalCount;
-	private TwitterClient mTwitterClient;
-	private Button mBtnTweet;
-	private Button mBtnCancel;
-	private boolean mOptionsChanged = false;
-	private User mUser;
-	private String mReplyTo;
+	private TextView 		mTvUsername;
+	private TextView 		mTvScreenName;
+	private EditText 		mEtTweet;
+	private ImageView 		mIvProfileImage;
+	private TextView 		mTvCharLeft;
+	private int 			mTweetCharCountLeft;
+	private int 			mTotalCount;
+	private TwitterClient 	mTwitterClient;
+	private Button 			mBtnTweet;
+	private Button 			mBtnCancel;
+	private boolean 		mOptionsChanged = false;
+	private User 			mUser;
+	private String 			mReplyTo;
 	
 	private ComposeFragmentListener listener;
 	private long inReplyId;

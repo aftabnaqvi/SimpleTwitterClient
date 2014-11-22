@@ -29,10 +29,10 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 // should use FragmentActivity or ActionBarActivity
 public class TimelineActivity extends FragmentActivity implements ComposeFragmentListener{
-	protected TwitterClient mTwitterClient;
-	private User mCurrentUser;
-	private SearchView searchView;;
-	private HomeTimelineFragment mHomeTimelineFragment;
+	protected TwitterClient 		mTwitterClient;
+	private User 					mCurrentUser;
+	private SearchView 				mSearchView;;
+	private HomeTimelineFragment 	mHomeTimelineFragment;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -124,13 +124,13 @@ public class TimelineActivity extends FragmentActivity implements ComposeFragmen
 	public boolean onCreateOptionsMenu(Menu menu) {
     	getMenuInflater().inflate(R.menu.menu_timeline_activity, menu);
         final MenuItem searchItem = menu.findItem(R.id.action_search);
-        searchView = (SearchView) searchItem.getActionView();
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+        mSearchView = (SearchView) searchItem.getActionView();
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             
         	@Override
             public boolean onQueryTextSubmit(String query) {
             	//searchView.setIconified(true); // stopped calling twice... http://stackoverflow.com/questions/17874951/searchview-onquerytextsubmit-runs-twice-while-i-pressed-once
-            	searchView.clearFocus();
+            	mSearchView.clearFocus();
             	Log.i("INFO: query....", query);
             	
             	// FOLLOWING TWO LINE ARE ALSO WORKING...

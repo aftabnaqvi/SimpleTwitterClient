@@ -12,17 +12,15 @@ import com.codepath.syed.basictwitter.models.Tweet;
 import com.codepath.syed.basictwitter.models.User;
 
 public class UserProfileActivity extends FragmentActivity implements ComposeFragmentListener{
-	//protected TwitterClient mTwitterClient;
-	protected User mCurrUser;
-	protected UserProfileFragment mUserProfileFragment;
-	protected UserTimelineFragment mUserTimelineFragment;
+	protected User 					mCurrUser;
+	protected UserProfileFragment 	mUserProfileFragment;
+	protected UserTimelineFragment 	mUserTimelineFragment;
     
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.user_profile_activity);
-		//mTwitterClient = TwitterApplication.getRestClient();
 		getActionBar().setDisplayHomeAsUpEnabled(true);
 
 		mCurrUser = getIntent().getParcelableExtra("user");

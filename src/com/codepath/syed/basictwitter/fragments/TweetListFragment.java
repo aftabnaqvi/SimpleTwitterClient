@@ -38,26 +38,25 @@ import eu.erikw.PullToRefreshListView;
 import eu.erikw.PullToRefreshListView.OnRefreshListener;
 
 public abstract class TweetListFragment extends Fragment {
-	protected TwitterClient mTwitterClient;
-	protected ArrayList<Tweet> mTweets;
-	protected TweetArrayAdapter mTweetsAdapter;
+	protected TwitterClient 		mTwitterClient;
+	protected ArrayList<Tweet> 		mTweets;
+	protected TweetArrayAdapter 	mTweetsAdapter;
 	protected PullToRefreshListView mLvTweets;
-	protected String mLastTweetId = null;
-	protected User user;
-	protected static int REQUEST_CODE = 200;
-	protected boolean requestFetchDataInProgress;
-	protected TextView selectedTvRetweet;
-	protected TextView selectedTvFavorite;
-	protected ProgressBar progressBar;
-	protected Tweet selectedTweet;
-	protected int selectedPosition;
+	protected String 				mLastTweetId = null;
+	protected User 					mUser;
+	protected boolean 				mRequestFetchDataInProgress;
+	protected TextView 				mTvSelectedRetweet;
+	protected TextView 				mTvSelectedFavorite;
+	protected ProgressBar 			mProgressBar;
+	protected Tweet 				mSelectedTweet;
+	protected int 					mSelectedPosition;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		mTwitterClient = TwitterApplication.getRestClient();
-		requestFetchDataInProgress = false;
+		mRequestFetchDataInProgress = false;
 		mTweets = new ArrayList<Tweet>();
 		mTweetsAdapter = new TweetArrayAdapter(getActivity(), mTweets); // use getActivity very carefully... 
 		
@@ -74,8 +73,7 @@ public abstract class TweetListFragment extends Fragment {
 		mLvTweets = (PullToRefreshListView)view.findViewById(R.id.lvTweets);
 		mLvTweets.setAdapter(mTweetsAdapter);
 		
-		progressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-		progressBar.setVisibility(View.VISIBLE);
+		mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
 		//getActivity().getActionBar().setBackgroundDrawable(getResources().getDrawable(R.drawable.mobile_banner));
 		
 		// Attach the listener to the AdapterView onCreate
@@ -103,29 +101,29 @@ public abstract class TweetListFragment extends Fragment {
 		mLvTweets.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				selectedPosition = position + 1;
+				mSelectedPosition = position + 1;
 			     	long viewId = view.getId();
-			     	final Tweet tweet = (Tweet)mTweetsAdapter.getItem(selectedPosition); // I don't know why position is coming as -1. but it is working for now.
+			     	final Tweet tweet = (Tweet)mTweetsAdapter.getItem(mSelectedPosition); // I don't know why position is coming as -1. but it is working for now.
 			         if (viewId == R.id.tvReply) {
 			         	
 			             Log.d("debug:", "tvReply Clicked");
 			             if(tweet!=null){
-			            	 user = tweet.getUser();
+			            	 mUser = tweet.getUser();
 			            	 showComposeTweetFragment("@"+tweet.getUser().getScreenName()+" ", tweet.getUid());
 			             }
 			         } else if (viewId == R.id.tvRetweet) {
 			        	 if(tweet!=null){
-			        		 selectedTvRetweet = (TextView)view.findViewById(R.id.tvRetweet);			        		 
-			        		 selectedTweet = tweet;
+			        		 mTvSelectedRetweet = (TextView)view.findViewById(R.id.tvRetweet);			        		 
+			        		 mSelectedTweet = tweet;
 			        		 showRetwwetConfirmationAlert(tweet.isRetweeted() ? true : false);
 			        	 }
 			         	Log.d("debug:", "tvRetweet Clicked");
 			         	
 			         } else if(viewId == R.id.tvFavorite){
 			        	 if(tweet!=null){
-			        		 selectedTvFavorite = (TextView)view.findViewById(R.id.tvFavorite);
-			        		 selectedTweet = tweet;
-			        		 onFavoriteClick(selectedTvFavorite);
+			        		 mTvSelectedFavorite = (TextView)view.findViewById(R.id.tvFavorite);
+			        		 mSelectedTweet = tweet;
+			        		 onFavoriteClick(mTvSelectedFavorite);
 			        	 }
 			        	 Log.d("debug:", "tvFavorite Clicked");
 			         } else if(viewId == R.id.ivProfileImage){
@@ -171,39 +169,39 @@ public abstract class TweetListFragment extends Fragment {
 	}
 	
 	private void updateRetweet(){
-        if (selectedTweet.isRetweeted()) {
-            selectedTvRetweet.setCompoundDrawablesWithIntrinsicBounds(R.drawable.retweet_on, 0, 0, 0);
+        if (mSelectedTweet.isRetweeted()) {
+        	mTvSelectedRetweet.setCompoundDrawablesWithIntrinsicBounds(R.drawable.retweet_on, 0, 0, 0);
         } else {
-        	selectedTvRetweet.setCompoundDrawablesWithIntrinsicBounds(R.drawable.retweet, 0, 0, 0);
+        	mTvSelectedRetweet.setCompoundDrawablesWithIntrinsicBounds(R.drawable.retweet, 0, 0, 0);
         }
-        selectedTvRetweet.setText(String.valueOf(selectedTweet.getReTweetCount()));
-        updateRetweeted(selectedTweet);
+        mTvSelectedRetweet.setText(String.valueOf(mSelectedTweet.getReTweetCount()));
+        updateRetweeted(mSelectedTweet);
     }
 
     private void updateFavorites(){
-        if (selectedTweet.isFavorited()) {
-        	selectedTvFavorite.setCompoundDrawablesWithIntrinsicBounds(R.drawable.favorite_on, 0, 0, 0);
+        if (mSelectedTweet.isFavorited()) {
+        	mTvSelectedFavorite.setCompoundDrawablesWithIntrinsicBounds(R.drawable.favorite_on, 0, 0, 0);
         } else {
-        	selectedTvFavorite.setCompoundDrawablesWithIntrinsicBounds(R.drawable.favorite, 0, 0, 0);
+        	mTvSelectedFavorite.setCompoundDrawablesWithIntrinsicBounds(R.drawable.favorite, 0, 0, 0);
         }
-        selectedTvFavorite.setText(String.valueOf(selectedTweet.getFavoriteCount()));
-        updateFavorite(selectedTweet);
+        mTvSelectedFavorite.setText(String.valueOf(mSelectedTweet.getFavoriteCount()));
+        updateFavorite(mSelectedTweet);
     }
     
 	public void onReTweetClick(View view) {
-        if (selectedTweet.isRetweeted()) {
-        	mTwitterClient.postStatusDestroy(selectedTweet.getUid(), new JsonHttpResponseHandler() {
+        if (mSelectedTweet.isRetweeted()) {
+        	mTwitterClient.postStatusDestroy(mSelectedTweet.getUid(), new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(JSONObject jsonObject) {
-                	selectedTweet = Tweet.fromJSON(jsonObject);
+                	mSelectedTweet = Tweet.fromJSON(jsonObject);
                     updateRetweet();
                 }
             });
         } else {
-        	mTwitterClient.postRetweet(selectedTweet.getUid(), new JsonHttpResponseHandler() {
+        	mTwitterClient.postRetweet(mSelectedTweet.getUid(), new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(JSONObject jsonObject) {
-                	selectedTweet = Tweet.fromJSON(jsonObject);
+                	mSelectedTweet = Tweet.fromJSON(jsonObject);
                     updateRetweet();
                 }
             });
@@ -213,19 +211,19 @@ public abstract class TweetListFragment extends Fragment {
 
     public void onFavoriteClick(View view) {
 
-        if (selectedTweet.isFavorited()){
-        	mTwitterClient.postFavoriteRemoved(selectedTweet.getUid(), new JsonHttpResponseHandler(){
+        if (mSelectedTweet.isFavorited()){
+        	mTwitterClient.postFavoriteRemoved(mSelectedTweet.getUid(), new JsonHttpResponseHandler(){
                 @Override
                 public void onSuccess(JSONObject jsonObject) {
-                	selectedTweet = Tweet.fromJSON(jsonObject);
+                	mSelectedTweet = Tweet.fromJSON(jsonObject);
                     updateFavorites();
                 }
             });
         } else {
-        	mTwitterClient.postFavoriteCreate(selectedTweet.getUid(), new JsonHttpResponseHandler() {
+        	mTwitterClient.postFavoriteCreate(mSelectedTweet.getUid(), new JsonHttpResponseHandler() {
                 @Override
                 public void onSuccess(JSONObject jsonObject) {
-                	selectedTweet = Tweet.fromJSON(jsonObject);
+                	mSelectedTweet = Tweet.fromJSON(jsonObject);
                     updateFavorites();
                 }
             });
@@ -245,7 +243,7 @@ public abstract class TweetListFragment extends Fragment {
     
     protected void showComposeTweetFragment(String tweetReplyTo, long inReplyId){
     	FragmentManager fm = getActivity().getSupportFragmentManager();
-    	ComposeTweetFragment fragment = ComposeTweetFragment.newInstance(tweetReplyTo, inReplyId, user);
+    	ComposeTweetFragment fragment = ComposeTweetFragment.newInstance(tweetReplyTo, inReplyId, mUser);
     	fragment.show(fm, "compose_tweet_fragment");
     }
     
@@ -261,14 +259,14 @@ public abstract class TweetListFragment extends Fragment {
 	}
 	
 	public void updateFavorite(Tweet tweet){
-		mTweetsAdapter.getItem(selectedPosition).setFavoriteCount(tweet.getFavoriteCount());
-		mTweetsAdapter.getItem(selectedPosition).setFavorited(tweet.isFavorited());
+		mTweetsAdapter.getItem(mSelectedPosition).setFavoriteCount(tweet.getFavoriteCount());
+		mTweetsAdapter.getItem(mSelectedPosition).setFavorited(tweet.isFavorited());
 		mTweetsAdapter.notifyDataSetChanged();
 	}
 	
 	public void updateRetweeted(Tweet tweet){
-		mTweetsAdapter.getItem(selectedPosition).setReTweetCount(tweet.getReTweetCount());
-		mTweetsAdapter.getItem(selectedPosition).setRetweeted(tweet.isRetweeted());
+		mTweetsAdapter.getItem(mSelectedPosition).setReTweetCount(tweet.getReTweetCount());
+		mTweetsAdapter.getItem(mSelectedPosition).setRetweeted(tweet.isRetweeted());
 		mTweetsAdapter.notifyDataSetChanged();
 	}
 	

@@ -20,6 +20,7 @@ public class HomeTimelineFragment extends TweetListFragment {
 	}
 
 	protected void populateTimeline(boolean bRefresh) {
+		mProgressBar.setVisibility(View.VISIBLE);
 		if( !isDeviceConnected() ){
 			getFromDB();
 			return;
@@ -42,7 +43,7 @@ public class HomeTimelineFragment extends TweetListFragment {
 			@Override
 			public void onSuccess(JSONArray jsonArray) {
 				addAll(Tweet.fromJSONArray(jsonArray));
-				progressBar.setVisibility(View.GONE);
+				mProgressBar.setVisibility(View.GONE);
 				Log.d("debug: tweets size", String.valueOf(mTweets.size()));
 				mLvTweets.onRefreshComplete(); 
 				
@@ -55,7 +56,7 @@ public class HomeTimelineFragment extends TweetListFragment {
 			public void onFailure(Throwable e, String s) {
 				Log.d("debug:", e.toString());
 				Log.d("debug:", s);
-				progressBar.setVisibility(View.GONE);
+				mProgressBar.setVisibility(View.GONE);
 			}
 		});
 	}
@@ -63,5 +64,6 @@ public class HomeTimelineFragment extends TweetListFragment {
 	private void getFromDB(){
 		mTweetsAdapter.clear();
 		mTweetsAdapter.addAll(Tweet.getAll());
+		mProgressBar.setVisibility(View.GONE);
     }
 }

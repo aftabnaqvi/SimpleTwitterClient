@@ -314,6 +314,8 @@ public class PullToRefreshListView extends ListView{
                         case PULL_TO_REFRESH:
                             resetHeader();
                             break;
+					default:
+						break;
                     }
                 }
                 break;

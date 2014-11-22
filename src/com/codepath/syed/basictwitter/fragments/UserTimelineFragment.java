@@ -11,8 +11,8 @@ import com.loopj.android.http.JsonHttpResponseHandler;
 
 public class UserTimelineFragment extends TweetListFragment {
     private static final String TAG = UserTimelineFragment.class.getName();
-    private User user;
-    private int resultCount;
+    private User 	mUser;
+    private int 	mResultCount;
     
     public static UserTimelineFragment newInstance(User user, int resultCount){
         UserTimelineFragment userTimelineFragment = new UserTimelineFragment();
@@ -26,7 +26,7 @@ public class UserTimelineFragment extends TweetListFragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        user = getArguments().getParcelable("user");
+        mUser = getArguments().getParcelable("user");
     }
 
     @Override
@@ -45,10 +45,10 @@ public class UserTimelineFragment extends TweetListFragment {
         }
         
         long userId = 0;
-        if (user != null){
-            userId = user.getUid();
+        if (mUser != null){
+            userId = mUser.getUid();
         }
-        mTwitterClient.getUserTimeline(userId, mLastTweetId, resultCount, new JsonHttpResponseHandler() {
+        mTwitterClient.getUserTimeline(userId, mLastTweetId, mResultCount, new JsonHttpResponseHandler() {
             @Override
             public void onSuccess(JSONArray jsonArray) {
                 addAll(Tweet.fromJSONArray(jsonArray));

@@ -21,9 +21,10 @@ public class MentionsTimelineFragment extends TweetListFragment {
 	}
 	
 	protected void populateTimeline(boolean bRefresh) {
+		mProgressBar.setVisibility(View.VISIBLE);
 		if( !isDeviceConnected() ){
 			getFromDB();
-			progressBar.setVisibility(View.GONE);
+			mProgressBar.setVisibility(View.GONE);
 			return;
 		}
 		// Check if we have already fetch tweets once.
@@ -33,7 +34,7 @@ public class MentionsTimelineFragment extends TweetListFragment {
         	mLastTweetId = String.valueOf(mTweets.get(mTweets.size() - 1).getUid() - 1) ;
         }
         
-		if(requestFetchDataInProgress == true){
+		if(mRequestFetchDataInProgress == true){
 			Log.i("debug: ", "A request to fetch data from network resource is already in progress.");
 			return;
 		}
@@ -42,26 +43,26 @@ public class MentionsTimelineFragment extends TweetListFragment {
 			mTweetsAdapter.clear();
 			mLastTweetId = null;
 		}
-		requestFetchDataInProgress = true;
+		mRequestFetchDataInProgress = true;
 		mTwitterClient.getMentionsTimeline(mLastTweetId, new JsonHttpResponseHandler(){
 			
 			@Override
 			public void onSuccess(JSONArray jsonArray) {
 				addAll(Tweet.fromJSONArray(jsonArray));
-				progressBar.setVisibility(View.GONE);
+				mProgressBar.setVisibility(View.GONE);
 				mLvTweets.onRefreshComplete(); 
 				
 				for (Tweet tweet : mTweets){
                     tweet.saveTweet();
                 }
-                requestFetchDataInProgress = false;
+				mRequestFetchDataInProgress = false;
 			}
 
 			@Override
 			public void onFailure(Throwable e, String s) {
 				Log.d("debug:", e.toString());
 				Log.d("debug:", s);
-				progressBar.setVisibility(View.GONE);
+				mProgressBar.setVisibility(View.GONE);
 			}
 		});
 	}
@@ -69,5 +70,6 @@ public class MentionsTimelineFragment extends TweetListFragment {
     private void getFromDB(){
     	mTweetsAdapter.clear();
     	mTweetsAdapter.addAll(Tweet.getAll());
+    	mProgressBar.setVisibility(View.GONE);
     }
 }

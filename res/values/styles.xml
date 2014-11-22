@@ -32,7 +32,7 @@
     </style>
 
     <style name="TwitterTabBar" parent="android:style/Widget.Holo.Light.ActionBar.TabBar">
-        <item name="android:background">@color/twitter_gary_4</item>
+        <item name="android:background">@color/twitter_gary_3</item>
     </style>
 
 

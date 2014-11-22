@@ -10,17 +10,18 @@ import android.view.View;
 import com.codepath.syed.basictwitter.models.Tweet;
 import com.loopj.android.http.JsonHttpResponseHandler;
 
-
 public class SearchResultFragment extends TweetListFragment {
-	private String query;
+	private String mQuery;
+	
 	public SearchResultFragment(){
 		
 	}
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		Bundle args = getArguments();
-		query = args.getString("query");
+		mQuery = args.getString("query");
 	}
 
 	protected void populateTimeline(boolean bRefresh) {
@@ -40,7 +41,7 @@ public class SearchResultFragment extends TweetListFragment {
 			mLastTweetId = null;
 		}
 		
-		mTwitterClient.getSearchTweets(query, mLastTweetId, new JsonHttpResponseHandler(){
+		mTwitterClient.getSearchTweets(mQuery, mLastTweetId, new JsonHttpResponseHandler(){
 			@Override
 			public void onSuccess(JSONObject jsonObject) {
 				if (!jsonObject.isNull("statuses")){
@@ -51,7 +52,7 @@ public class SearchResultFragment extends TweetListFragment {
                         e.printStackTrace();
                     }
                     addAll(Tweet.fromJSONArray(jsonArray));
-                    progressBar.setVisibility(View.GONE);
+                    mProgressBar.setVisibility(View.GONE);
 	                for (Tweet tweet : mTweets) {
 	                    tweet.saveTweet();
 	                }
@@ -63,7 +64,7 @@ public class SearchResultFragment extends TweetListFragment {
 			public void onFailure(Throwable e, String s) {
 				Log.d("debug:", e.toString());
 				Log.d("debug:", s);
-				progressBar.setVisibility(View.GONE);
+				mProgressBar.setVisibility(View.GONE);
 			}
 		});
 	}

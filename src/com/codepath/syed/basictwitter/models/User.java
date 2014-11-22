@@ -12,52 +12,53 @@ import com.activeandroid.annotation.Table;
 
 @Table(name = "User")
 public class User extends Model implements Parcelable{
+
+	@Column(name = "name")
+	private String mName;
+	
+	@Column(name = "screeNname")
+	private String mScreenName;
+	
+	@Column(name = "uid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
+	private long mUid;
+	
+	@Column(name = "profileImageUrl")
+	private String mProfileImageUrl;
+	
+	@Column(name = "description")
+	private String mDescription;
+	
+	@Column(name = "followersCount")
+	private long mFollowersCount;
+	
+	@Column(name = "followingCount")
+	private long mFollowingCount;
+	
+	@Column(name = "tweetsCount")
+	private long mTweetsCount;
+	
+	@Column(name = "profileBackgroundImageUrl")
+	private String mProfileBackgroundImageUrl;
+
 	public String getDescription() {
-		return description;
+		return mDescription;
 	}
 
 	public long getFollowersCount() {
-		return followersCount;
+		return mFollowersCount;
 	}
-
-	@Column(name = "name")
-	private String name;
 	
-	@Column(name = "screeNname")
-	private String screenName;
-	
-	@Column(name = "uid", unique = true, onUniqueConflict = Column.ConflictAction.REPLACE)
-	private long uid;
-	
-	@Column(name = "profileImageUrl")
-	private String profileImageUrl;
-	
-	@Column(name = "description")
-	private String description;
-	
-	@Column(name = "followersCount")
-	private long followersCount;
-	
-	@Column(name = "followingCount")
-	private long followingCount;
-	
-	@Column(name = "tweetsCount")
-	private long tweetsCount;
-	
-	@Column(name = "profileBackgroundImageUrl")
-	private String profileBackgroundImageUrl;
-
 	public String getProfileBackgroundImageUrl() {
 		// TODO Auto-generated method stub
-		return profileBackgroundImageUrl;
+		return mProfileBackgroundImageUrl;
 	}
 	
 	public long getFollowingCount() {
-		return followingCount;
+		return mFollowingCount;
 	}
 
 	public long getTweetsCount() {
-		return tweetsCount;
+		return mTweetsCount;
 	}
 
     public User() {
@@ -68,45 +69,43 @@ public class User extends Model implements Parcelable{
 	 * @return the name
 	 */
 	public String getName() {
-		return name;
+		return mName;
 	}
 
 	/**
 	 * @return the screenName
 	 */
 	public String getScreenName() {
-		return screenName;
+		return mScreenName;
 	}
-
 
 	/**
 	 * @return the uid
 	 */
 	public long getUid() {
-		return uid;
+		return mUid;
 	}
-
 
 	/**
 	 * @return the profileImageUrl
 	 */
 	public String getProfileImageUrl() {
-		return profileImageUrl;
+		return mProfileImageUrl;
 	}
 
 	// factory method.
 	public static User fromJson(JSONObject json) {
 		User user = new User();
 		try{
-			user.name = json.getString("name");
-			user.uid = json.getLong("id");
-			user.screenName = json.getString("screen_name");
-			user.profileImageUrl = json.getString("profile_image_url");
-			user.followersCount = json.getLong("followers_count");
-			user.description = json.getString("description");
-			user.followingCount = json.getLong("friends_count");
-			user.tweetsCount = json.getLong("statuses_count");
-			user.profileBackgroundImageUrl = json.getString("profile_background_image_url");
+			user.mName = json.getString("name");
+			user.mUid = json.getLong("id");
+			user.mScreenName = json.getString("screen_name");
+			user.mProfileImageUrl = json.getString("profile_image_url");
+			user.mFollowersCount = json.getLong("followers_count");
+			user.mDescription = json.getString("description");
+			user.mFollowingCount = json.getLong("friends_count");
+			user.mTweetsCount = json.getLong("statuses_count");
+			user.mProfileBackgroundImageUrl = json.getString("profile_background_image_url");
 			
 		}catch(JSONException e){
 			e.printStackTrace();
@@ -117,27 +116,27 @@ public class User extends Model implements Parcelable{
 
 	@Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.name);
-        dest.writeLong(this.uid);
-        dest.writeString(this.screenName);
-        dest.writeString(this.profileImageUrl);
-        dest.writeLong(this.followersCount);
-        dest.writeString(this.description);
-        dest.writeLong(this.followingCount);
-        dest.writeLong(this.tweetsCount);
-        dest.writeString(this.profileBackgroundImageUrl);
+        dest.writeString(this.mName);
+        dest.writeLong(this.mUid);
+        dest.writeString(this.mScreenName);
+        dest.writeString(this.mProfileImageUrl);
+        dest.writeLong(this.mFollowersCount);
+        dest.writeString(this.mDescription);
+        dest.writeLong(this.mFollowingCount);
+        dest.writeLong(this.mTweetsCount);
+        dest.writeString(this.mProfileBackgroundImageUrl);
     }
 
     private User(Parcel in) {
-        this.name = in.readString();
-        this.uid = in.readLong();
-        this.screenName = in.readString();
-        this.profileImageUrl = in.readString();
-        this.followersCount = in.readLong();
-        this.description = in.readString();
-        this.followingCount = in.readLong();
-        this.tweetsCount = in.readLong();
-        this.profileBackgroundImageUrl = in.readString();
+        this.mName = in.readString();
+        this.mUid = in.readLong();
+        this.mScreenName = in.readString();
+        this.mProfileImageUrl = in.readString();
+        this.mFollowersCount = in.readLong();
+        this.mDescription = in.readString();
+        this.mFollowingCount = in.readLong();
+        this.mTweetsCount = in.readLong();
+        this.mProfileBackgroundImageUrl = in.readString();
     }
 
     public static final Parcelable.Creator<User> CREATOR = new Parcelable.Creator<User>() {
