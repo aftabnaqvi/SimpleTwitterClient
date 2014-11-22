@@ -10,7 +10,7 @@
         android:id="@+id/compose_tweet"
         android:orderInCategory="100"
         android:showAsAction="ifRoom|collapseActionView"
-        android:icon="@drawable/compose_tweet_action"
+        android:icon="@drawable/ic_new_tweet"
         android:title="@string/compose_tweet_title"/>
 	
 	<item

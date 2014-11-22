@@ -24,13 +24,13 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ComposeTweetActivity extends Activity {
 	
-	private TextView mTvUsername;
-	private TextView mTvScreenName;
-	private EditText mEtTweet;
-	private ImageView mIvProfileImage;
-	private int mTweetCharCountLeft;
-	private int mTotalCount;
-	private TwitterClient mTwitterClient;
+	private TextView 		mTvUsername;
+	private TextView 		mTvScreenName;
+	private EditText 		mEtTweet;
+	private ImageView 		mIvProfileImage;
+	private int 			mTweetCharCountLeft;
+	private int 			mTotalCount;
+	private TwitterClient 	mTwitterClient;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
