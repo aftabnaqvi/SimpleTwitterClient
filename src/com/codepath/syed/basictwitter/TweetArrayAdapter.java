@@ -3,6 +3,7 @@ package com.codepath.syed.basictwitter;
 import java.util.List;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.text.Html;
 import android.text.SpannableString;
@@ -14,13 +15,36 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.codepath.syed.basictwitter.models.Tweet;
 import com.codepath.syed.utils.Utility;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.FailReason;
+import com.nostra13.universalimageloader.core.assist.ImageLoadingListener;
 
 import eu.erikw.PullToRefreshListView;
+
+class BitmapScaler
+{
+	// Scale and maintain aspect ratio given a desired width
+	// BitmapScaler.scaleToFitWidth(bitmap, 100);
+	public static Bitmap scaleToFitWidth(Bitmap b, int width)
+	{
+		float factor = width / (float) b.getWidth();
+		return Bitmap.createScaledBitmap(b, width, (int) (b.getHeight() * factor), true);
+	}
+
+
+	// Scale and maintain aspect ratio given a desired height
+	// BitmapScaler.scaleToFitHeight(bitmap, 100);
+	public static Bitmap scaleToFitHeight(Bitmap b, int height)
+	{
+		float factor = height / (float) b.getHeight();
+		return Bitmap.createScaledBitmap(b, (int) (b.getWidth() * factor), height, true);
+	}
+}
 
 public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 
@@ -38,6 +62,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 		private TextView	tvRetweet;
 		private TextView	tvFavorite;
 		private ImageView	ivTweetImage;
+		private ProgressBar	ivTweetImageProgressBar;
 	}
 
 	@Override
@@ -58,6 +83,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 			viewHolder.tvFavorite = (TextView)convertView.findViewById(R.id.tvFavorite); 
 			viewHolder.tvReply = (TextView)convertView.findViewById(R.id.tvReply);
 			viewHolder.ivTweetImage = (ImageView)convertView.findViewById(R.id.ivTweetImage);
+			viewHolder.ivTweetImageProgressBar = (ProgressBar)convertView.findViewById(R.id.imageProgressBar);
 			
 			convertView.setTag(viewHolder);
 		}else {
@@ -113,6 +139,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 			viewHolder.ivProfileImage.setImageResource(android.R.color.transparent);
 			ImageLoader imageLoader = ImageLoader.getInstance();
 			imageLoader.displayImage(tweet.getUser().getProfileImageUrl(), viewHolder.ivProfileImage);
+			display(viewHolder.ivProfileImage, tweet.getUser().getProfileImageUrl(), null);
 		}
 		
 		if(viewHolder.tvName != null){
@@ -130,7 +157,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 		if (tweet.getTwitterMediaUrls() != null && tweet.getTwitterMediaUrls().size() > 0){
 			ImageLoader imageLoader = ImageLoader.getInstance();
 			viewHolder.ivTweetImage.setVisibility(View.VISIBLE);
-            imageLoader.displayImage(tweet.getTwitterMediaUrls().get(0).getMediaUrlHttps(),viewHolder.ivTweetImage);
+			display(viewHolder.ivTweetImage, tweet.getTwitterMediaUrls().get(0).getMediaUrlHttps(), viewHolder.ivTweetImageProgressBar);
             
         } else {
             viewHolder.ivTweetImage.setVisibility(View.GONE);
@@ -163,5 +190,55 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 		if(viewHolder.tvScreenName != null){
 			viewHolder.tvScreenName.setText("@" + tweet.getUser().getScreenName());
 		}
+	}
+	
+	public void display(ImageView img, String url, final ProgressBar spinner)
+	{
+		ImageLoader.getInstance().displayImage(url, img, new ImageLoadingListener(){
+	
+	        @Override
+	        public void onLoadingStarted(String imageUri, View view) {
+	        	if(spinner != null)
+	        		spinner.setVisibility(View.VISIBLE); // set the spinner visible
+	        }
+	        
+	        @Override
+	        public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+	        	if(spinner != null)
+	        		spinner.setVisibility(View.GONE); // set the spinenr visibility to gone
+	        }
+	        
+	        @Override
+	        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+	        	if(spinner != null)
+	        		spinner.setVisibility(View.GONE); //  loading completed set the spinner visibility to gone
+	        	
+	        	int width=0;
+	        	if( view.getWidth() == 0){
+	        		width = view.getMeasuredWidth();
+	        	}else{
+	        		width = view.getWidth();
+	        	}
+	        	if( width == 0){
+	        		width = loadedImage.getWidth();
+	        	}
+	         
+	        	int height=0;
+	        	if( view.getHeight() == 0){
+	        		height = view.getMeasuredHeight();
+	        	}else{
+	        		height = view.getHeight();
+	        	}
+	        	if( height == 0 ){
+	        		height = loadedImage.getHeight();
+	        	}
+	        	BitmapScaler.scaleToFitHeight(loadedImage, height);
+	        	BitmapScaler.scaleToFitWidth(loadedImage, width);
+	        }
+	        
+	        @Override
+	        public void onLoadingCancelled(String imageUri, View view) {
+	        }
+		});
 	}
 }

@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="8dp"
-    android:descendantFocusability="blocksDescendants">
+    android:descendantFocusability="blocksDescendants"
+    android:background="#FFFFFF">
 
     <ImageView
         android:id="@+id/ivProfileImage"
@@ -31,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/tvName"
         android:layout_alignParentRight="true"
-        android:layout_marginRight="10dp"
+        android:layout_marginRight="15dp"
         android:text="TextView"
         android:textColor="#8899a6" 
         android:textSize="10sp"/>
@@ -62,27 +63,15 @@
         android:textSize="10sp"/>
 
     <TextView
-        android:id="@+id/tvRetweet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/tvReply"
-        android:layout_alignBottom="@+id/tvReply"
-        android:layout_centerHorizontal="true"
-        android:drawableLeft="@drawable/retweet"
-        android:text="79" 
-        android:textColor="#8899a6"
-        android:textSize="10sp"/>
-
-    <TextView
         android:id="@+id/tvScreenName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/tvName"
         android:layout_alignBottom="@+id/tvName"
         android:layout_toRightOf="@+id/tvName"
-        android:text="TextView" 
+        android:text="ScreenName" 
         android:textColor="#8899a6"/>
-
+<!-- 
     <ImageView
         android:id="@+id/ivTweetImage"
         android:layout_width="fill_parent"
@@ -92,35 +81,51 @@
         android:layout_alignRight="@+id/tvTweetBody"
         android:layout_below="@+id/tvTweetBody"
         android:src="@drawable/bird_blue_48" 
-        android:visibility="gone"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:layout_marginTop="5dp"
         android:layout_marginBottom="5dp"
         android:adjustViewBounds="true"/>
+ -->
 
     <TextView
         android:id="@+id/tvReply"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/tvTweetBody"
-        android:layout_below="@+id/tvTweetBody"
+        android:layout_alignLeft="@+id/ivTweetImage"
+        android:layout_below="@+id/ivTweetImage"
         android:drawableRight="@drawable/reply" />
-    
-<!-- 
+
+    <TextView
+        android:id="@+id/tvRetweet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/tvReply"
+        android:layout_centerHorizontal="true"
+        android:drawableLeft="@drawable/retweet"
+        android:text="79"
+        android:textColor="#8899a6"
+        android:textSize="10sp" />
+
     <ImageView
-        android:id="@+id/ivTweetImage1"
+        android:id="@+id/ivTweetImage"
         android:layout_width="fill_parent"
         android:layout_height="150dp"
-        android:layout_above="@+id/tvRetweet"
         android:layout_alignLeft="@+id/tvTweetBody"
         android:layout_alignRight="@+id/tvTweetBody"
         android:layout_below="@+id/tvTweetBody"
-        android:src="@drawable/bird_blue_48" 
-
-        android:scaleType="centerCrop"
-        android:layout_marginTop="5dp"
-        android:layout_marginBottom="5dp"
         android:adjustViewBounds="true"
-        android:visibility="gone"/> 
-    --> 
+        android:scaleType="fitXY"
+        android:src="@drawable/bird_blue_48" 
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"/>
+
+    <ProgressBar
+        android:id="@+id/imageProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/tvRetweet"
+        android:layout_below="@+id/ivProfileImage"
+        android:layout_marginTop="44dp" 
+        android:visibility="gone"/>
+    
 </RelativeLayout>

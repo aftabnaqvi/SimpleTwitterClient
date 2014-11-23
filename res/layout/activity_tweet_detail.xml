@@ -6,7 +6,7 @@
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
     android:paddingTop="10dp"
-    tools:context="com.jaiminshah.codepath.basictwitter.activities.DetailActivity">
+    android:background="#FFFFFF">
     <ImageView
         android:id="@+id/ivRetweetedIcon"
         android:layout_width="15dp"
