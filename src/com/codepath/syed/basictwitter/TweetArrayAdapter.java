@@ -155,7 +155,6 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 		}	
 		
 		if (tweet.getTwitterMediaUrls() != null && tweet.getTwitterMediaUrls().size() > 0){
-			ImageLoader imageLoader = ImageLoader.getInstance();
 			viewHolder.ivTweetImage.setVisibility(View.VISIBLE);
 			display(viewHolder.ivTweetImage, tweet.getTwitterMediaUrls().get(0).getMediaUrlHttps(), viewHolder.ivTweetImageProgressBar);
             
@@ -211,7 +210,7 @@ public class TweetArrayAdapter extends ArrayAdapter<Tweet>{
 	        @Override
 	        public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
 	        	if(spinner != null)
-	        		spinner.setVisibility(View.GONE); //  loading completed set the spinner visibility to gone
+	        		spinner.setVisibility(View.GONE); //  loading completed set the spinne m[p 8978 p 5p b84etttttttttyetw4r visibility to gone
 	        	
 	        	int width=0;
 	        	if( view.getWidth() == 0){
