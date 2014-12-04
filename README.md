@@ -86,8 +86,5 @@ Advanced: Improve the user interface and theme the app to feel twitter branded
 Advanced: User can search for tweets matching a particular query and see results
 
 Demo:
-![Alt text](https://github.com/aftabnaqvi/SimpleTwitterClient/blob/master/SimpleTwitterClient_2.0.gif "cc-flow.jpeg")
 
-updated Demo:
-
-![Alt text](https://github.com/aftabnaqvi/SimpleTwitterClient/blob/master/SimpleTwitterClient_21.gif "cc-flow.jpeg")
+![Alt text](https://github.com/aftabnaqvi/SimpleTwitterClient/blob/master/TwitterClient-Demo.gif "cc-flow.jpeg")
